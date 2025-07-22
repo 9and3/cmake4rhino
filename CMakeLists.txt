@@ -28,7 +28,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-
 # ------------------------------------------------------------------------------------
 # INSERT Rhino plugin information here
 # ------------------------------------------------------------------------------------
@@ -54,55 +53,40 @@ set(PLUGIN_ID "5AC5581C-0559-492F-9E46-21574EE7F52B")
 set(ICON_PATH "${CMAKE_SOURCE_DIR}/res/cmake4rhino.ico")
 set(PLUGIN_ORIGINAL_FILENAME "${PLUGIN_INTERNAL_NAME}.rhp")
 
-
+# ------------------------------------------------------------------------------------
+# Source files, win resources and headers
+# ------------------------------------------------------------------------------------
 project(cmake4rhino LANGUAGES VERSION ${PLUGIN_VERSION_MAJOR}.${PLUGIN_VERSION_MINOR}.${PLUGIN_VERSION_PATCH} CXX)
 
- 
-
-
-# enable the Windows Resource Compiler for .rc files
+# generate the .rc file for the plugin
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake4rhino.rc.in
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake4rhino.rc
     @ONLY
 )
-# # TODO: this check is maybe needless?
-# if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-#     enable_language("RC")
-#     set (WIN32_RESOURCES 
-#         ${CMAKE_CURRENT_SOURCE_DIR}/cmake4rhino.rc
-#     )
-# else()
-#     message(ERROR "Rhino C++ plugins is not supported for MacOS due to MFC.")
-# endif()
 
+# src/headers and .rhp (aka .dll)
+add_library(cmake4rhino SHARED)
 
 file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
-file(GLOB HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/*.h)
 file(GLOB WIN32_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 ${CMAKE_CURRENT_SOURCE_DIR}/cmake4rhino.rc
 ${CMAKE_CURRENT_SOURCE_DIR}/res/cmake4rhino.rc
-)
-
-add_library(cmake4rhino SHARED)
-set_target_properties(cmake4rhino PROPERTIES SUFFIX ".rhp")
-set_target_properties(cmake4rhino PROPERTIES
-RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
 )
 target_sources(cmake4rhino PRIVATE
 ${SOURCES}
 ${WIN32_RESOURCES}
 )
-target_include_directories(cmake4rhino PRIVATE
-${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-list(REMOVE_ITEM HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h)
+
+target_include_directories(cmake4rhino PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_precompile_headers(cmake4rhino PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h)
 
+set_target_properties(cmake4rhino PROPERTIES SUFFIX ".rhp")
+set_target_properties(cmake4rhino PROPERTIES
+RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+)
 
-# target_include_directories(cmake4rhino PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-# TODO: this one is coming too late? It should be iun the beginning? Maybe not
+# pre-processor data for the plugin
 target_compile_definitions(cmake4rhino PRIVATE
     PLUGIN_VERSION="${PLUGIN_VERSION}"
     PLUGIN_COMPANY_NAME=L\"${PLUGIN_COMPANY_NAME}\"
@@ -121,11 +105,9 @@ target_compile_definitions(cmake4rhino PRIVATE
     PLUGIN_ID=L\"${PLUGIN_ID}\"
 )
 
-
 # ------------------------------------------------------------------------------------
 # Basic dependencies and options
 # ------------------------------------------------------------------------------------
-
 # integration of Microsoft Foundation Classes (MFC) with CMake
 find_package(MFC REQUIRED)
 # It should be set to ``1`` for the static MFC library, and
