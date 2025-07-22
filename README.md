@@ -1,6 +1,6 @@
 
 <p align="center">
-    <img src="logo/logo_txt_900.png" width="300">
+    <img src="~logo/logo_txt_900.png" width="300">
 </p>
 <!-- <p align="center">
     <img src="https://github.com/ibois-epfl/augmented-carpentry/actions/workflows/docker-ubuntu-build.yml/badge.svg">
@@ -8,13 +8,13 @@
     <img src="https://github.com/ibois-epfl/augmented-carpentry/actions/workflows/gh-build.yml/badge.svg">
 </p> -->
 
+## Content
+
+## Quickstart
 
 
-Repository for CMake-based Rhino plugin development.
 
 
-
-## Cpp
 
 ### Resources:
 
