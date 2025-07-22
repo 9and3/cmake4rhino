@@ -1,5 +1,5 @@
-# rh_CICD
-Repository for testing CI/CD for Rhino and Grasshopper
+# cmake4rhino
+Repository for CMake-based Rhino plugin development.
 
 
 

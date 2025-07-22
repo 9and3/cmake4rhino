@@ -15,10 +15,9 @@
 # rhino toolbar in the cmake file then
 # TODO: the icons resources or others resourcess should not be put also in rg.in,
 # but only in the cmake?
-# TODO: the  config system shoudl work better? not using the cmake4rhino seems bad? We
+
 # should put the info there and not on cmake?
 
-# TODO: work on the DEBUG switch to automatize from CMAKE to rc
 
 # TODO: find a mechanism to adapt he name for the tempalte everywhere
 
