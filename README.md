@@ -1,4 +1,15 @@
-# cmake4rhino
+
+<p align="center">
+    <img src="logo/logo_txt_900.png" width="400">
+</p>
+<!-- <p align="center">
+    <img src="https://github.com/ibois-epfl/augmented-carpentry/actions/workflows/docker-ubuntu-build.yml/badge.svg">
+    <img src="https://github.com/ibois-epfl/augmented-carpentry/actions/workflows/docker-ubuntu-build-and-test.yml/badge.svg">
+    <img src="https://github.com/ibois-epfl/augmented-carpentry/actions/workflows/gh-build.yml/badge.svg">
+</p> -->
+
+
+
 Repository for CMake-based Rhino plugin development.
 
 

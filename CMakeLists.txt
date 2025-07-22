@@ -16,8 +16,6 @@
 # TODO: the icons resources or others resourcess should not be put also in rg.in,
 # but only in the cmake?
 
-# should put the info there and not on cmake?
-
 
 # TODO: find a mechanism to adapt he name for the tempalte everywhere
 
@@ -28,7 +26,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # ------------------------------------------------------------------------------------
-# INSERT Rhino plugin information here
+# >>>>>>>>>>>>>>>>>>>>> INSERT Rhino plugin information here <<<<<<<<<<<<<<<<<<<<<<<<<
 # ------------------------------------------------------------------------------------
 set(PLUGIN_VERSION_MAJOR 1)
 set(PLUGIN_VERSION_MINOR 0)
@@ -51,6 +49,10 @@ set(PLUGIN_ID "5AC5581C-0559-492F-9E46-21574EE7F52B")
 
 set(ICON_PATH "${CMAKE_SOURCE_DIR}/res/cmake4rhino.ico")
 set(PLUGIN_ORIGINAL_FILENAME "${PLUGIN_INTERNAL_NAME}.rhp")
+
+# ------------------------------------------------------------------------------------
+# Options
+# ------------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------------
 # Source files, win resources and headers
@@ -105,7 +107,7 @@ target_compile_definitions(cmake4rhino PRIVATE
 )
 
 # ------------------------------------------------------------------------------------
-# Basic dependencies and options
+# Basic dependencies and features
 # ------------------------------------------------------------------------------------
 # integration of Microsoft Foundation Classes (MFC) with CMake
 find_package(MFC REQUIRED)
