@@ -2,11 +2,13 @@ include(FindPackageHandleStandardArgs)
 
 set(RHINO8SDK_FOUND FALSE)
 
-# TODO: add a better help for hints?: RHINO8SDK_PATH can be defined or try the default location
 set(_RHINO8SDK_HINTS
     "${RHINO8SDK_PATH}"
+    "$ENV{RHINO8SDK_ROOT}"
     "C:/Program Files/Rhino 8 SDK"
     "C:/Program Files (x86)/Rhino 8 SDK"
+    "C:/Program Files/Rhino 7 SDK"
+    "C:/Program Files (x86)/Rhino 7 SDK"
 )
 
 find_path(RHINO8SDK_INCLUDE_DIR
@@ -24,8 +26,6 @@ find_path(RHINO8SDK_LIB_DIR
 if(RHINO8SDK_INCLUDE_DIR AND RHINO8SDK_LIB_DIR)
     set(RHINO8SDK_FOUND TRUE)
 endif()
-
-# TODO: set all the library variables directly here
 
 find_package_handle_standard_args(Rhino8SDK DEFAULT_MSG RHINO8SDK_INCLUDE_DIR RHINO8SDK_LIB_DIR)
 

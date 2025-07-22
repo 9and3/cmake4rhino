@@ -2,22 +2,29 @@ include(FindPackageHandleStandardArgs)
 
 set(MFC_FOUND FALSE)
 
-# Only Visual Studio generators support MFC
+# Only Microsoft Visual Studio generators support MFC
 if(MSVC)
     if(CMAKE_GENERATOR MATCHES "Visual Studio")
         set(MFC_FOUND TRUE)
     endif()
 endif()
 if (MFC_FOUND)
+    set(_MFC_HINTS
+        "${MFC_ROOT}"
+        "$ENV{MFC_ROOT}"
+        "C:/Program Files (x86)/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC"
+        "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC"
+        "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC"
+    )
     find_path(MFC_INCLUDE_DIR
         NAMES afx.h
         PATH_SUFFIXES include
-        HINTS "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC"
+        HINTS ${_MFC_HINTS}
     )
 
     find_library(MFC_LIBRARY
         NAMES mfc140 mfc140u mfc140d mfc140ud
-        HINTS "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC"
+        HINTS ${_MFC_HINTS}
     )
 
     if(MFC_INCLUDE_DIR AND MFC_LIBRARY)
