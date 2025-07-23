@@ -3,18 +3,13 @@
 # Distributed under the MIT License.
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-# todo list:
-# TODO: find a mechanism to adapt he name for the tempalte everywhere --> cockiecutter
-# TODO: test ci
-
-
 cmake_minimum_required(VERSION 3.15)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # --------------------------------------------------------------------------------------------------------------------------
-# >>>>>>>>>>>>>>>>>>>>>>> INSERT Rhino plugin information here >>>>>>>>>>>>>>>>>>>>>>>
+# >>> INSERT your plugin information here >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # --------------------------------------------------------------------------------------------------------------------------
 set(PLUGIN_VERSION_MAJOR 1)
 set(PLUGIN_VERSION_MINOR 0)
@@ -42,13 +37,11 @@ set(PLUGIN_ORIGINAL_FILENAME "${PLUGIN_NAME}.rhp")
 # Options
 # --------------------------------------------------------------------------------------------------------------------------
 message(STATUS "==== Project Options =====================================================================================")
-message(STATUS "  -DMFC_ROOT=...                                : Path to the MFC root directory")
+message(STATUS "  -DMFC_ROOT=...                                 : Path to the MFC root directory")
 set(MFC_ROOT "" CACHE PATH "")
-message(STATUS "  -DRHINO8SDK_ROOT=...                          : Path to the Rhino 8 SDK root directory")
+message(STATUS "  -DRHINO8SDK_ROOT=...                           : Path to the Rhino 8 SDK root directory")
 set(RHINO8SDK_ROOT "" CACHE PATH "")
-# message(STATUS "  -DCMAKE_BUILD_TYPE=...                        : Build type (Debug or Release)")
-# set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
-message(STATUS "  -DRUN_POSTBUILD_RHINO=ON                      : Run Rhino just after the compilation (default: OFF)")
+message(STATUS "  -DRUN_POSTBUILD_RHINO=ON                       : Run Rhino just after the compilation (default: OFF)")
 set(RUN_POSTBUILD_RHINO OFF CACHE BOOL "")
 message(STATUS "  -DRHINO_EXE_PATH=...                           : Path to the Rhino executable (Rhino.exe) path directory")
 set(RHINO_EXE_PATH "" CACHE PATH "")
@@ -107,7 +100,7 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE
 )
 
 # --------------------------------------------------------------------------------------------------------------------------
-# Additional dependencies and options
+# >>> Insert additional dependencies and options >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # --------------------------------------------------------------------------------------------------------------------------
 # Insert here your additional libraries or options (e.g., Boost, OpenCV, etc.)
 

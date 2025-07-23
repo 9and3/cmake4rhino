@@ -38,6 +38,5 @@ Notes:
 - Specify the the config Debug or Release needss to be eexplicitly set in `cmake --build build --config Debug` or `cmake --build build --config Release`.
 
 ### todo:
-- [ ] make `FindMFC.cmake` more robust
-- [ ] make `FindRhinoSDK.cmake` more robust
-- [ ] automate the `.rc` file generation with the company name and other info for ocmpilation from Cmake
+- [ ] test CI
+- [ ] do the coockiecutter

@@ -1,0 +1,48 @@
+name: Update Cookiecutter Template
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  update-template:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install requirements
+        run: pip install cookiecutter
+
+      - name: Copy and template files
+        run: |
+          mkdir template
+          rsync -a --exclude '.git' ./ template/
+          cd template
+          # Replace all occurrences in file contents
+          find . -type f -exec sed -i 's/cmake4rhino/{{cookiecutter.project_slug}}/g' {} +
+          # Rename files and folders
+          find . -depth -name '*cmake4rhino*' -exec bash -c 'mv "$0" "${0//cmake4rhino/{{cookiecutter.project_slug}}}"' {} \;
+          # Add cookiecutter.json
+          echo '{
+            "project_slug": "cmake4rhino",
+            "plugin_name": "cmake4rhino_cookiecutter",
+          }' > cookiecutter.json
+
+      - name: Commit and push to cookietemplate branch
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -B cookietemplate
+          git rm -rf .
+          cp -r template/* .
+          git add .
+          git commit -m "Update Cookiecutter template from main"
+          git push --force origin cookietemplate
