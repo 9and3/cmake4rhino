@@ -82,15 +82,10 @@ CRhinoCommand::result CCommandDummyCmake4rhino::RunCommand(const CRhinoCommandCo
 
   // print on console a simple debug message
 #ifdef RHINO_DEBUG_PLUGIN
-  if (AttachConsole(ATTACH_PARENT_PROCESS) || AllocConsole())
-  {
-      // Redirect standard output to the console if you run Rhino from a terminal,
-      // it can be interesting for debugging purposes.
-      freopen("CONOUT$", "w", stdout);
-      std::cout << "Debug message from Rhino plug-in!" << std::endl;
-  }
+  std::cout << "Debug-mode message from Rhino plug-in (Win console)\n" << std::endl;
+  RhinoApp().Print(L"Debug-mode message from Rhino plug-in (Rhino console)\n");
 #else
-  RhinoApp().Print(L"Debug message from Rhino plug-in (Rhino console)\n");
+  RhinoApp().Print(L"Release-mode message from Rhino plug-in (Rhino console)\n");
 #endif
 
 
