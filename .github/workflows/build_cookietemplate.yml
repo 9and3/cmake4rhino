@@ -35,6 +35,7 @@ jobs:
           mkdir template
           rsync -a --exclude '.git' ./ template/
           cd template
+          
           # Replace all occurrences in file contents
           find . -type f -exec sed -i 's/cmake4rhino/{{cookiecutter.project_slug}}/g' {} +
           # Rename files and folders: cmake4rhino* -> {{cookiecutter.project_slug}}*
@@ -43,11 +44,17 @@ jobs:
             dst=$(echo "$src" | sed "s/cmake4rhino/{{cookiecutter.project_slug}}/g")
             mv "$src" "$dst"
           ' {} \;
+
           # Add cookiecutter.json (no trailing comma)
           echo '{
             "project_slug": "cmake4rhino",
             "plugin_name": "cmake4rhino_cookiecutter"
           }' > cookiecutter.json
+
+          # Move all files except cookiecutter.json into the project_slug directory
+          mkdir -p "{{cookiecutter.project_slug}}"
+          shopt -s extglob
+          mv !(cookiecutter.json|{{cookiecutter.project_slug}}) "{{cookiecutter.project_slug}}"/
 
       - name: Commit and push to cookietemplate branch
         run: |
