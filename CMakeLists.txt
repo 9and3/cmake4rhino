@@ -154,14 +154,12 @@ target_compile_definitions(cmake4rhino PRIVATE
 # --------------------------------------------------------------------------------------------------------------------------
 # Post-build steps
 # --------------------------------------------------------------------------------------------------------------------------
-# FIXME: this is not working, the plugin is not installed afterwards
 if (RUN_POSTBUILD_RHINO)
     message(STATUS "Running Rhino after build...")
     find_package(RhinoExe REQUIRED)
     add_custom_target(run_rhino ALL
-        # COMMAND ${RHINO_EXE} /nosplash /runscript="!_RunPlugin ${CMAKE_BINARY_DIR}/cmake4rhino.rhp"
-        COMMAND ${RHINO_EXE} /nosplash /runscript="-_PluginManager _Install \"${CMAKE_BINARY_DIR}/cmake4rhino.rhp\" _Enable _OK"
-        COMMENT "Running Rhino with the built plugin in ${CMAKE_BINARY_DIR}/cmake4rhino.rhp"
+        COMMAND ${RHINO_EXE} /nosplash "${CMAKE_BINARY_DIR}/$<CONFIG>/cmake4rhino.rhp"
+        COMMENT "Running Rhino with the built plugin in ${CMAKE_BINARY_DIR}/$<CONFIG>/cmake4rhino.rhp"
         VERBATIM
     )
     add_dependencies(run_rhino cmake4rhino)
