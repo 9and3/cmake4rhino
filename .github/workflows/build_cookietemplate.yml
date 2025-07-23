@@ -1,4 +1,4 @@
-name: Update Cookiecutter Template
+name: Build Cookiecutter Template
 
 # FIXME: adjsut when to fire this one
 on:
@@ -7,11 +7,11 @@ on:
   workflow_dispatch:
 
 permissions:
-    contents: write
-    pull-requests: write
+  contents: write
+  pull-requests: write
 
 jobs:
-  update-template:
+  build-template:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main
@@ -37,9 +37,13 @@ jobs:
           cd template
           # Replace all occurrences in file contents
           find . -type f -exec sed -i 's/cmake4rhino/{{cookiecutter.project_slug}}/g' {} +
-          # Rename files and folders
-          find . -depth -name '*cmake4rhino*' -exec bash -c 'mv "$0" "${0//cmake4rhino/{{cookiecutter.project_slug}}}"' {} \;
-          # Add cookiecutter.json
+          # Rename files and folders (correctly handle .rc/.rc.in)
+          find . -depth -name '*cmake4rhino*' -exec bash -c '
+            src="$0"
+            dst="${src//cmake4rhino/{{cookiecutter.project_slug}}}"
+            mv "$src" "$dst"
+          ' {} \;
+          # Add cookiecutter.json (no trailing comma)
           echo '{
             "project_slug": "cmake4rhino",
             "plugin_name": "cmake4rhino_cookiecutter"
@@ -53,6 +57,6 @@ jobs:
           git rm -rf .
           cp -r template/* .
           git add .
-          git commit -m "Update Cookiecutter template from main"
+          git commit -m "Build Cookiecutter template from main"
           git push --force origin cookietemplate
 
