@@ -44,6 +44,7 @@ jobs:
             src="$0"
             dst="${src//cmake4rhino/{{cookiecutter.project_slug}}}"
             mv "$src" "$dst"
+          ' {} \;
           # Add cookiecutter.json (no trailing comma)
           echo '{
             "project_slug": "cmake4rhino",

@@ -2,11 +2,9 @@
 <p align="center">
     <img src="~logo/logo_txt_900.png" width="300">
 </p>
-<!-- <p align="center">
-    <img src="https://github.com/ibois-epfl/augmented-carpentry/actions/workflows/docker-ubuntu-build.yml/badge.svg">
-    <img src="https://github.com/ibois-epfl/augmented-carpentry/actions/workflows/docker-ubuntu-build-and-test.yml/badge.svg">
-    <img src="https://github.com/ibois-epfl/augmented-carpentry/actions/workflows/gh-build.yml/badge.svg">
-</p> -->
+<p align="center">
+    <img src="https://github.com/9and3/cmake4rhino/actions/workflows/build_cookietemplate.yml/badge.svg">
+</p>
 
 ## Content
 
