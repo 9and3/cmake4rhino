@@ -2,7 +2,7 @@ name: Update Cookiecutter Template
 
 on:
   push:
-    branches: [ main ]
+    branches: [ Main ]
   workflow_dispatch:
 
 permissions:
