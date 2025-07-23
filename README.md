@@ -2,18 +2,33 @@
 <p align="center">
     <img src="~logo/logo_txt_900.png" width="300">
 </p>
-<p align="center">
-    <img src="https://github.com/9and3/cmake4rhino/actions/workflows/build_cookietemplate.yml/badge.svg">
-</p>
-
-## Content
-
-This is a simple CMake template for Rhino plugins, which can be used to quickly set up a new Rhino plugin project using CMake. It is tested to work with Rhino 8 and 7 SDKs, VSCode and is maintained by Andrea Settimi (9and3).
-The template is distributed as a cookiecutter template, which can be used to generate a new project with the desired name and settings. Have fun cmakers!
 
 
+## CI Status
 
-## Quickstart
+| Workflow                   | Status |
+|----------------------------|:------:|
+| Build Cookiecutter Template | [![](https://github.com/9and3/cmake4rhino/actions/workflows/build_cookietemplate.yml/badge.svg)](https://github.com/9and3/cmake4rhino/actions/workflows/build_cookietemplate.yml) |
+
+### Content
+
+This is a simple [CMake](https://cmake.org/) template for [Rhino plugins](https://developer.rhino3d.com/guides/cpp/), to quickly set up a new C++ project.
+It is tested to work with Rhino 8 and 7 SDKs, VSCode. All contributions are welcome!
+
+The template is distributed as a [cookiecutter](https://github.com/cookiecutter/cookiecutter) template, which can be used to generate a new project with the desired name and settings. Have fun cmakers!
+
+<!-- <details> -->
+<summary><b>CI Status Summary</b></summary>
+
+| Check                        | Status |
+|------------------------------|:------:|
+| Downloadable Template  | ![Build](https://github.com/9and3/cmake4rhino/actions/workflows/build_cookietemplate.yml/badge.svg) |
+
+<!-- </details> -->
+
+
+
+### Quickstart
 
 
 

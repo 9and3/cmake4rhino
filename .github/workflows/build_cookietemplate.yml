@@ -1,4 +1,4 @@
-name: Build Cookiecutter Template
+name: build coockiecutter
 
 # FIXME: adjsut when to fire this one
 on:
@@ -37,24 +37,23 @@ jobs:
           cd template
           
           # Replace all occurrences in file contents
-          find . -type f -exec sed -i 's/cmake4rhino/{{cookiecutter.project_slug}}/g' {} +
-          # Rename files and folders: cmake4rhino* -> {{cookiecutter.project_slug}}*
+          find . -type f -exec sed -i 's/cmake4rhino/{{cookiecutter.your_plugin_name}}/g' {} +
+          # Rename files and folders: cmake4rhino* -> {{cookiecutter.your_plugin_name}}*
           find . -depth -name '*cmake4rhino*' -exec bash -c '
             src="$0"
-            dst=$(echo "$src" | sed "s/cmake4rhino/{{cookiecutter.project_slug}}/g")
+            dst=$(echo "$src" | sed "s/cmake4rhino/{{cookiecutter.your_plugin_name}}/g")
             mv "$src" "$dst"
           ' {} \;
 
           # Add cookiecutter.json (no trailing comma)
           echo '{
-            "project_slug": "cmake4rhino",
-            "plugin_name": "cmake4rhino_cookiecutter"
+            "your_plugin_name": "cmake4rhino"
           }' > cookiecutter.json
 
-          # Move all files except cookiecutter.json into the project_slug directory
-          mkdir -p "{{cookiecutter.project_slug}}"
+          # Move all files except cookiecutter.json into the your_plugin_name directory
+          mkdir -p "{{cookiecutter.your_plugin_name}}"
           shopt -s extglob
-          mv !(cookiecutter.json|{{cookiecutter.project_slug}}) "{{cookiecutter.project_slug}}"/
+          mv !(cookiecutter.json|{{cookiecutter.your_plugin_name}}) "{{cookiecutter.your_plugin_name}}"/
 
       - name: Commit and push to cookietemplate branch
         run: |
