@@ -83,7 +83,7 @@ The remaining information to change can be found in the `CMakeLists.txt` file to
 https://github.com/9and3/cmake4rhino/blob/5d0722a11a8476ff51b25dceda3b8a25a282155d/CMakeLists.txt#L20-L31
 
 #### Logo
-The logo should be replaced in the `res/` folder with your own.
+The logo should be replaced in the `res/` folder with your own (remember 256-pixel square `.ico` file).
 
 #### Compile
 
