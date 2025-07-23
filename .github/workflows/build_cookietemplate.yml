@@ -38,11 +38,12 @@ jobs:
           # Replace all occurrences in file contents
           find . -type f -exec sed -i 's/cmake4rhino/{{cookiecutter.project_slug}}/g' {} +
           # Rename files and folders (correctly handle .rc/.rc.in)
+          find . -name '{{cookiecutter.project_slug.rc.in}}' -exec bash -c 'mv "$0" "{{cookiecutter.project_slug}}.rc.in"' {} \;
+          find . -name '{{cookiecutter.project_slug.rc}}' -exec bash -c 'mv "$0" "{{cookiecutter.project_slug}}.rc"' {} \;
           find . -depth -name '*cmake4rhino*' -exec bash -c '
             src="$0"
             dst="${src//cmake4rhino/{{cookiecutter.project_slug}}}"
             mv "$src" "$dst"
-          ' {} \;
           # Add cookiecutter.json (no trailing comma)
           echo '{
             "project_slug": "cmake4rhino",

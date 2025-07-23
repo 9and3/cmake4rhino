@@ -10,6 +10,11 @@
 
 ## Content
 
+This is a simple CMake template for Rhino plugins, which can be used to quickly set up a new Rhino plugin project using CMake. It is tested to work with Rhino 8 and 7 SDKs, VSCode and is maintained by Andrea Settimi (9and3).
+The template is distributed as a cookiecutter template, which can be used to generate a new project with the desired name and settings. Have fun cmakers!
+
+
+
 ## Quickstart
 
 
