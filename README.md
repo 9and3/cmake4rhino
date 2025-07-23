@@ -2,13 +2,11 @@
 <p align="center">
     <img src="~logo/logo_txt_900.png" width="300">
 </p>
+<!-- <p align="center">
+    <img src="https://github.com/9and3/cmake4rhino/actions/workflows/build_cookietemplate.yml/badge.svg">
+</p> -->
 
 
-## CI Status
-
-| Workflow                   | Status |
-|----------------------------|:------:|
-| Build Cookiecutter Template | [![](https://github.com/9and3/cmake4rhino/actions/workflows/build_cookietemplate.yml/badge.svg)](https://github.com/9and3/cmake4rhino/actions/workflows/build_cookietemplate.yml) |
 
 ### Content
 
@@ -17,14 +15,11 @@ It is tested to work with Rhino 8 and 7 SDKs, VSCode. All contributions are welc
 
 The template is distributed as a [cookiecutter](https://github.com/cookiecutter/cookiecutter) template, which can be used to generate a new project with the desired name and settings. Have fun cmakers!
 
-<!-- <details> -->
-<summary><b>CI Status Summary</b></summary>
+<br>
 
 | Check                        | Status |
 |------------------------------|:------:|
 | Downloadable Template  | ![Build](https://github.com/9and3/cmake4rhino/actions/workflows/build_cookietemplate.yml/badge.svg) |
-
-<!-- </details> -->
 
 
 
