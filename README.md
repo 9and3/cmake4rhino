@@ -34,6 +34,8 @@ for debug build:
 
 Notes:
 - `RHINO8SDK_PATH` can be set to the path of the Rhino SDK, or it will try to find it in the default location.
+- It supports Rhino 8 and 7 SDK.
+- Specify the the config Debug or Release needss to be eexplicitly set in `cmake --build build --config Debug` or `cmake --build build --config Release`.
 
 ### todo:
 - [ ] make `FindMFC.cmake` more robust

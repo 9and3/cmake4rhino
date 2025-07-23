@@ -1,23 +1,11 @@
-# ////////////////////////////////////////////////////////////////////////////////////
+# //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 # Author: 2025 Andrea Settimi, cmake4rhino
 # Distributed under the MIT License.
-# ////////////////////////////////////////////////////////////////////////////////////
+# //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 # Notes:
-# TODO: add configurations?Debug/Release, any difference?
-# TODO: observe the .vcxproj and put in cmake all the elements and options
-# e.g. the image for the icon paneé?
-# TODO: understand well the .rc files and erase vstudio stamps at the top
-# TODO: update the rc from cmake from info like the plug in name, the icon? (maybe not),
-# debug version and precompilation flags
-# TODO: add indication in cmake file for  where to put additional dependencies
-# NOTES: not supporting .rhi because yak is replacing it. See how to integrate the 
-# rhino toolbar in the cmake file then
-# TODO: the icons resources or others resourcess should not be put also in rg.in,
-# but only in the cmake?
-
-
-# TODO: find a mechanism to adapt he name for the tempalte everywhere
+# TODO: find a mechanism to adapt he name for the tempalte everywhere --> cockiecutter
+# TODO: test ci
 
 
 cmake_minimum_required(VERSION 3.15)
@@ -25,9 +13,9 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# ------------------------------------------------------------------------------------
-# >>>>>>>>>>>>>>>>>>>>> INSERT Rhino plugin information here <<<<<<<<<<<<<<<<<<<<<<<<<
-# ------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------------
+# >>>>>>>>>>>>>>>>>>>>>>> INSERT Rhino plugin information here >>>>>>>>>>>>>>>>>>>>>>>
+# --------------------------------------------------------------------------------------------------------------------------
 set(PLUGIN_VERSION_MAJOR 1)
 set(PLUGIN_VERSION_MINOR 0)
 set(PLUGIN_VERSION_PATCH 0)
@@ -50,13 +38,25 @@ set(PLUGIN_ID "5AC5581C-0559-492F-9E46-21574EE7F52B")
 set(ICON_PATH "${CMAKE_SOURCE_DIR}/res/cmake4rhino.ico")
 set(PLUGIN_ORIGINAL_FILENAME "${PLUGIN_INTERNAL_NAME}.rhp")
 
-# ------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------------
 # Options
-# ------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------------
+message(STATUS "==== Project Options =====================================================================================")
+message(STATUS "  -DMFC_ROOT=...                                : Path to the MFC root directory")
+set(MFC_ROOT "" CACHE PATH "")
+message(STATUS "  -DRHINO8SDK_ROOT=...                          : Path to the Rhino 8 SDK root directory")
+set(RHINO8SDK_ROOT "" CACHE PATH "")
+# message(STATUS "  -DCMAKE_BUILD_TYPE=...                        : Build type (Debug or Release)")
+# set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
+message(STATUS "  -DRUN_POSTBUILD_RHINO=ON                      : Run Rhino just after the compilation (default: OFF)")
+set(RUN_POSTBUILD_RHINO OFF CACHE BOOL "")
+message(STATUS "  -DRHINO_EXE_PATH=...                           : Path to the Rhino executable (Rhino.exe) path directory")
+set(RHINO_EXE_PATH "" CACHE PATH "")
+message(STATUS "==========================================================================================================")
 
-# ------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------------
 # Source files, win resources and headers
-# ------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------------
 project(cmake4rhino LANGUAGES VERSION ${PLUGIN_VERSION_MAJOR}.${PLUGIN_VERSION_MINOR}.${PLUGIN_VERSION_PATCH} CXX)
 
 # generate the .rc file for the plugin
@@ -106,9 +106,14 @@ target_compile_definitions(cmake4rhino PRIVATE
     PLUGIN_ID=L\"${PLUGIN_ID}\"
 )
 
-# ------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------------
+# Additional dependencies and options
+# --------------------------------------------------------------------------------------------------------------------------
+# Insert here your additional libraries or options (e.g., Boost, OpenCV, etc.)
+
+# --------------------------------------------------------------------------------------------------------------------------
 # Basic dependencies and features
-# ------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------------
 # integration of Microsoft Foundation Classes (MFC) with CMake
 find_package(MFC REQUIRED)
 # It should be set to ``1`` for the static MFC library, and
@@ -130,7 +135,6 @@ target_link_libraries(cmake4rhino PRIVATE
 # Define required preprocessor macros
 target_compile_definitions(cmake4rhino PRIVATE
     WIN64
-    /UWIN32
     _WINDOWS
     _USRDLL
     _UNICODE
@@ -139,19 +143,26 @@ target_compile_definitions(cmake4rhino PRIVATE
 )
 target_compile_options(cmake4rhino PRIVATE /UWIN32)  # Add this to undefine WIN64
 
-# Set the precompiled variables for Debug mode
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message(STATUS "Building in Debug mode")
-    target_compile_definitions(cmake4rhino PRIVATE
+# Set the precompiled variables for Debug/Release mode for VS multigeneator
+target_compile_definitions(cmake4rhino PRIVATE
     $<$<CONFIG:Debug>:_DEBUG;RHINO_DEBUG_PLUGIN>
-    )
-endif()
+)
+target_compile_definitions(cmake4rhino PRIVATE
+    $<$<CONFIG:Release>:NDEBUG>
+)
 
-# ------------------------------------------------------------------------------------
-# Additional dependencies and options
-# ------------------------------------------------------------------------------------
-# Insert here your additional libraries or options (e.g., Boost, OpenCV, etc.)
-
-# ------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------------
 # Post-build steps
-# ------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------------
+# FIXME: this is not working, the plugin is not installed afterwards
+if (RUN_POSTBUILD_RHINO)
+    message(STATUS "Running Rhino after build...")
+    find_package(RhinoExe REQUIRED)
+    add_custom_target(run_rhino ALL
+        # COMMAND ${RHINO_EXE} /nosplash /runscript="!_RunPlugin ${CMAKE_BINARY_DIR}/cmake4rhino.rhp"
+        COMMAND ${RHINO_EXE} /nosplash /runscript="-_PluginManager _Install \"${CMAKE_BINARY_DIR}/cmake4rhino.rhp\" _Enable _OK"
+        COMMENT "Running Rhino with the built plugin in ${CMAKE_BINARY_DIR}/cmake4rhino.rhp"
+        VERBATIM
+    )
+    add_dependencies(run_rhino cmake4rhino)
+endif()

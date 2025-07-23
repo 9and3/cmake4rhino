@@ -23,9 +23,6 @@
 // Plug-ins that require debugging information need to be built with
 // RHINO_DEBUG_PLUGIN defined.
 #if defined(RHINO_DEBUG_PLUGIN) && defined(_DEBUG)
-//  Rhino 6 Debug plug-ins should define RHINO_DEBUG_PLUGIN, 
-//  but not define _DEBUG in the .vcxproj file.
-#error Do not define _DEBUG - use RHINO_DEBUG_PLUGIN instead
 #endif
 
 // Rhino SDK Preamble
