@@ -1,6 +1,5 @@
 name: build coockiecutter
 
-# FIXME: adjsut when to fire this one
 on:
   push:
     branches: [ Main ]
