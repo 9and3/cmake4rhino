@@ -1,5 +1,6 @@
 name: Update Cookiecutter Template
 
+# FIXME: adjsut when to fire this one
 on:
   push:
     branches: [ Main ]
@@ -41,7 +42,7 @@ jobs:
           # Add cookiecutter.json
           echo '{
             "project_slug": "cmake4rhino",
-            "plugin_name": "cmake4rhino_cookiecutter",
+            "plugin_name": "cmake4rhino_cookiecutter"
           }' > cookiecutter.json
 
       - name: Commit and push to cookietemplate branch
