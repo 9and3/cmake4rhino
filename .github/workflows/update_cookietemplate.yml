@@ -3,6 +3,7 @@ name: Update Cookiecutter Template
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   update-template:
@@ -47,4 +48,3 @@ jobs:
           git commit -m "Update Cookiecutter template from main"
           git push --force origin cookietemplate
 
-          
