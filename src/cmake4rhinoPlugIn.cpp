@@ -18,7 +18,7 @@ RHINO_PLUG_IN_DECLARE
 
 // Rhino plug-in name
 // Provide a short, friendly name for this plug-in.
-RHINO_PLUG_IN_NAME(PLUGIN_INTERNAL_NAME);
+RHINO_PLUG_IN_NAME(PLUGIN_NAME);
 
 // Rhino plug-in id
 // Provide a unique uuid for this plug-in.

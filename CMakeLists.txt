@@ -3,7 +3,7 @@
 # Distributed under the MIT License.
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-# Notes:
+# todo list:
 # TODO: find a mechanism to adapt he name for the tempalte everywhere --> cockiecutter
 # TODO: test ci
 
@@ -23,7 +23,7 @@ set(PLUGIN_VERSION_BUILD 0)
 set(PLUGIN_VERSION "${PLUGIN_VERSION_MAJOR}.${PLUGIN_VERSION_MINOR}.${PLUGIN_VERSION_PATCH}.${PLUGIN_VERSION_BUILD}")
 
 set(PLUGIN_COMPANY_NAME "Your Own Organization")
-set(PLUGIN_INTERNAL_NAME "cmake4rhino")
+set(PLUGIN_NAME "cmake4rhino")
 set(PLUGIN_ADDRESS "123 Developer Street City State 12345-6789")
 set(PLUGIN_COUNTRY "My Country")
 set(PLUGIN_PHONE "123-456-7890")
@@ -35,8 +35,8 @@ set(PLUGIN_LEGAL_COPYRIGHT "Copyright © 2025 Your Name or Company")
 set(PLUGIN_FILE_DESCRIPTION "Rhino C++ Plugin in CMake for Custom Development")
 set(PLUGIN_ID "5AC5581C-0559-492F-9E46-21574EE7F52B")
 
-set(ICON_PATH "${CMAKE_SOURCE_DIR}/res/cmake4rhino.ico")
-set(PLUGIN_ORIGINAL_FILENAME "${PLUGIN_INTERNAL_NAME}.rhp")
+set(ICON_PATH "${CMAKE_SOURCE_DIR}/res/${PLUGIN_NAME}.ico")
+set(PLUGIN_ORIGINAL_FILENAME "${PLUGIN_NAME}.rhp")
 
 # --------------------------------------------------------------------------------------------------------------------------
 # Options
@@ -57,42 +57,42 @@ message(STATUS "================================================================
 # --------------------------------------------------------------------------------------------------------------------------
 # Source files, win resources and headers
 # --------------------------------------------------------------------------------------------------------------------------
-project(cmake4rhino LANGUAGES VERSION ${PLUGIN_VERSION_MAJOR}.${PLUGIN_VERSION_MINOR}.${PLUGIN_VERSION_PATCH} CXX)
+project(${PLUGIN_NAME} LANGUAGES VERSION ${PLUGIN_VERSION_MAJOR}.${PLUGIN_VERSION_MINOR}.${PLUGIN_VERSION_PATCH} CXX)
 
 # generate the .rc file for the plugin
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake4rhino.rc.in
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake4rhino.rc
+    ${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.rc.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.rc
     @ONLY
 )
 
 # src/headers and .rhp (aka .dll)
-add_library(cmake4rhino SHARED)
+add_library(${PLUGIN_NAME} SHARED)
 
 file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
 file(GLOB WIN32_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-${CMAKE_CURRENT_SOURCE_DIR}/cmake4rhino.rc
-${CMAKE_CURRENT_SOURCE_DIR}/res/cmake4rhino.rc
+${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.rc
+${CMAKE_CURRENT_SOURCE_DIR}/res/${PLUGIN_NAME}.rc
 )
-target_sources(cmake4rhino PRIVATE
+target_sources(${PLUGIN_NAME} PRIVATE
 ${SOURCES}
 ${WIN32_RESOURCES}
 )
 
-target_include_directories(cmake4rhino PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_precompile_headers(cmake4rhino PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h)
+target_include_directories(${PLUGIN_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_precompile_headers(${PLUGIN_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h)
 
-set_target_properties(cmake4rhino PROPERTIES SUFFIX ".rhp")
-set_target_properties(cmake4rhino PROPERTIES
+set_target_properties(${PLUGIN_NAME} PROPERTIES SUFFIX ".rhp")
+set_target_properties(${PLUGIN_NAME} PROPERTIES
 RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
 )
 
 # pre-processor data for the plugin
-target_compile_definitions(cmake4rhino PRIVATE
+target_compile_definitions(${PLUGIN_NAME} PRIVATE
     PLUGIN_VERSION="${PLUGIN_VERSION}"
     PLUGIN_COMPANY_NAME=L\"${PLUGIN_COMPANY_NAME}\"
     PLUGIN_FILEVERSION_STR=L\"${PLUGIN_VERSION_MAJOR}, ${PLUGIN_VERSION_MINOR}, ${PLUGIN_VERSION_PATCH}, ${PLUGIN_VERSION_BUILD}\"
-    PLUGIN_INTERNAL_NAME=L\"${PLUGIN_INTERNAL_NAME}\"
+    PLUGIN_NAME=L\"${PLUGIN_NAME}\"
     PLUGIN_LEGAL_COPYRIGHT=L\"${PLUGIN_LEGAL_COPYRIGHT}\"
     PLUGIN_ORIGINAL_FILENAME=L\"${PLUGIN_ORIGINAL_FILENAME}\"
     PLUGIN_FILE_DESCRIPTION=L\"${PLUGIN_DESCRIPTION}\"
@@ -124,8 +124,8 @@ set(CMAKE_MFC_FLAG 2)
 
 # Rhino 8 SDK
 find_package(Rhino8SDK REQUIRED)
-target_include_directories(cmake4rhino PRIVATE ${RHINO8SDK_INCLUDE_DIR})
-target_link_libraries(cmake4rhino PRIVATE
+target_include_directories(${PLUGIN_NAME} PRIVATE ${RHINO8SDK_INCLUDE_DIR})
+target_link_libraries(${PLUGIN_NAME} PRIVATE
     ${RHINO8SDK_LIB_DIR}/RhinoCore.lib
     ${RHINO8SDK_LIB_DIR}/RhinoLibrary.lib
     ${RHINO8SDK_LIB_DIR}/rdk.lib
@@ -133,7 +133,7 @@ target_link_libraries(cmake4rhino PRIVATE
 )
 
 # Define required preprocessor macros
-target_compile_definitions(cmake4rhino PRIVATE
+target_compile_definitions(${PLUGIN_NAME} PRIVATE
     WIN64
     _WINDOWS
     _USRDLL
@@ -141,13 +141,13 @@ target_compile_definitions(cmake4rhino PRIVATE
     UNICODE
     RHINO_LIB_DIR=${RHINO8SDK_LIB_DIR}
 )
-target_compile_options(cmake4rhino PRIVATE /UWIN32)  # Add this to undefine WIN64
+target_compile_options(${PLUGIN_NAME} PRIVATE /UWIN32)  # Add this to undefine WIN64
 
 # Set the precompiled variables for Debug/Release mode for VS multigeneator
-target_compile_definitions(cmake4rhino PRIVATE
+target_compile_definitions(${PLUGIN_NAME} PRIVATE
     $<$<CONFIG:Debug>:_DEBUG;RHINO_DEBUG_PLUGIN>
 )
-target_compile_definitions(cmake4rhino PRIVATE
+target_compile_definitions(${PLUGIN_NAME} PRIVATE
     $<$<CONFIG:Release>:NDEBUG>
 )
 
@@ -158,9 +158,9 @@ if (RUN_POSTBUILD_RHINO)
     message(STATUS "Running Rhino after build...")
     find_package(RhinoExe REQUIRED)
     add_custom_target(run_rhino ALL
-        COMMAND ${RHINO_EXE} /nosplash "${CMAKE_BINARY_DIR}/$<CONFIG>/cmake4rhino.rhp"
-        COMMENT "Running Rhino with the built plugin in ${CMAKE_BINARY_DIR}/$<CONFIG>/cmake4rhino.rhp"
+        COMMAND ${RHINO_EXE} /nosplash "${CMAKE_BINARY_DIR}/$<CONFIG>/${PLUGIN_NAME}.rhp"
+        COMMENT "Running Rhino with the built plugin in ${CMAKE_BINARY_DIR}/$<CONFIG>/${PLUGIN_NAME}.rhp"
         VERBATIM
     )
-    add_dependencies(run_rhino cmake4rhino)
+    add_dependencies(run_rhino ${PLUGIN_NAME})
 endif()
