@@ -10,7 +10,7 @@
 
 ### What is this?
 
-This is a simple [CMake](https://cmake.org/) template for [Rhino plugins](https://developer.rhino3d.com/guides/cpp/), to quickly set up a new C++ project.
+This is a [CMake](https://cmake.org/) template for [Rhino plugins](https://developer.rhino3d.com/guides/cpp/), to quickly set up a new C++ project.
 It is tested to work with Rhino 8 and 7 SDKs, VSCode and MSVC 2019 and 2022 . All contributions are welcome!
 
 The template is distributed as a [cookiecutter](https://github.com/cookiecutter/cookiecutter) template, which can be used to generate a new project with the desired name and settings. Have fun cmakers!
