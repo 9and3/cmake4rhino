@@ -40,7 +40,7 @@ jobs:
           # Rename files and folders: cmake4rhino* -> {{cookiecutter.project_slug}}*
           find . -depth -name '*cmake4rhino*' -exec bash -c '
             src="$0"
-            dst="${src//cmake4rhino/{{cookiecutter.project_slug}}}"
+            dst=$(echo "$src" | sed "s/cmake4rhino/{{cookiecutter.project_slug}}/g")
             mv "$src" "$dst"
           ' {} \;
           # Add cookiecutter.json (no trailing comma)
