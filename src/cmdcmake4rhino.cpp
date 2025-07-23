@@ -16,28 +16,28 @@
 
 #pragma region cmake4rhino command
 
-// Do NOT put the definition of class CCommandDummyCmake4rhino in a header
-// file. There is only ONE instance of a CCommandDummyCmake4rhino class
+// Do NOT put the definition of class CCommandcmake4rhino in a header
+// file. There is only ONE instance of a CCommandcmake4rhino class
 // and that instance is the static thecmake4rhinoCommand that appears
 // immediately below the class definition.
 
-class CCommandDummyCmake4rhino : public CRhinoCommand
+class CCommandcmake4rhino : public CRhinoCommand
 {
 public:
-  // The one and only instance of CCommandDummyCmake4rhino is created below.
+  // The one and only instance of CCommandcmake4rhino is created below.
   // No copy constructor or operator= is required.
   // Values of member variables persist for the duration of the application.
 
-  // CCommandDummyCmake4rhino::CCommandDummyCmake4rhino()
+  // CCommandcmake4rhino::CCommandcmake4rhino()
   // is called exactly once when static thecmake4rhinoCommand is created.
-  CCommandDummyCmake4rhino() = default;
+  CCommandcmake4rhino() = default;
 
-  // CCommandDummyCmake4rhino::~CCommandDummyCmake4rhino()
+  // CCommandcmake4rhino::~CCommandcmake4rhino()
   // is called exactly once when static thecmake4rhinoCommand is destroyed.
   // The destructor should not make any calls to the Rhino SDK. 
   // If your command has persistent settings, then override 
   // CRhinoCommand::SaveProfile and CRhinoCommand::LoadProfile.
-  ~CCommandDummyCmake4rhino() = default;
+  ~CCommandcmake4rhino() = default;
 
   // Returns a unique UUID for this command.
   // If you try to use an id that is already being used, then
@@ -59,13 +59,13 @@ public:
   CRhinoCommand::result RunCommand(const CRhinoCommandContext& context) override;
 };
 
-// The one and only CCommandDummyCmake4rhino object
-// Do NOT create any other instance of a CCommandDummyCmake4rhino class.
-static class CCommandDummyCmake4rhino thecmake4rhinoCommand;
+// The one and only CCommandcmake4rhino object
+// Do NOT create any other instance of a CCommandcmake4rhino class.
+static class CCommandcmake4rhino thecmake4rhinoCommand;
 
-CRhinoCommand::result CCommandDummyCmake4rhino::RunCommand(const CRhinoCommandContext& context)
+CRhinoCommand::result CCommandcmake4rhino::RunCommand(const CRhinoCommandContext& context)
 {
-  // CCommandDummyCmake4rhino::RunCommand() is called when the user
+  // CCommandcmake4rhino::RunCommand() is called when the user
   // runs the "cmake4rhino".
 
   // TODO: Add command code here.
