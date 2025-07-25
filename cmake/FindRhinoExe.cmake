@@ -2,7 +2,6 @@ include(FindPackageHandleStandardArgs)
 
 set(_RHINO_EXE_HINTS
     "${RHINO_EXE_PATH}"
-    "$ENV{RHINO_EXE_PATH}"
     "C:/Program Files/Rhino 8/System"
     "C:/Program Files/Rhino 8"
     "C:/Program Files (x86)/Rhino 8/System"
