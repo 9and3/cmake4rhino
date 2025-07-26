@@ -50,10 +50,17 @@ jobs:
         shell: powershell
 
 
+      - name DEBUG: print the pwd
+        run: pwd
+        shell: powershell
+      - name: Print the contents of the current directory
+
 
 
       - name: Configure CMake
-        run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DRHINO_DEBUG_PLUGIN=OFF -DRHINO8_SDK_ROOT="$(pwd)/rh821sdk_8.21.25188.17001/SourceDir/Rhino 8 SDK"
+      run: |
+        $sdkRoot = "$PWD\\rh821sdk_8.21.25188.17001\\SourceDir\\Rhino 8 SDK"
+        cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DRHINO_DEBUG_PLUGIN=OFF -DRHINO8_SDK_ROOT="$sdkRoot"
 
       - name: Build
         run: cmake --build build --config Release
