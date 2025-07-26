@@ -50,10 +50,9 @@ jobs:
         shell: powershell
 
 
-      - name DEBUG: print the pwd
+      - name: print the pwd
         run: pwd
         shell: powershell
-      - name: Print the contents of the current directory
 
 
 
