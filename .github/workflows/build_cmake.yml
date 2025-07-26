@@ -49,16 +49,14 @@ jobs:
         run: ls "rh821sdk_8.21.25188.17001/SourceDir/Rhino 8 SDK"
         shell: powershell
 
-
-      - name: print the pwd
-        run: pwd
-        shell: powershell
-
-
+      - name: List SDK contents
+        run: ls "$PWD\rh821sdk_8.21.25188.17001\SourceDir\Rhino 8 SDK"
+        shell: pwsh
 
       - name: Configure CMake
         run: |
-          cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DRHINO_DEBUG_PLUGIN=OFF -DRHINO8_SDK_ROOT="rh821sdk_8.21.25188.17001\SourceDir\Rhino 8 SDK\"
+          $sdkRoot = "$PWD\\rh821sdk_8.21.25188.17001\\SourceDir\\Rhino 8 SDK"
+          cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DRHINO_DEBUG_PLUGIN=OFF -DRHINO8SDK_ROOT="$sdkRoot"
         shell: pwsh
         working-directory: ${{ github.workspace }}
 
