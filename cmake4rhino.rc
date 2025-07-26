@@ -1,0 +1,51 @@
+#include "resource.h"
+#include "targetver.h"
+#include "afxres.h"
+#include "verrsrc.h"
+
+// ------------------------------------------------------------------------------
+// Version/Plug-in info
+// ------------------------------------------------------------------------------
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION      1.0.0.0
+ PRODUCTVERSION   1.0.0.0
+ FILEFLAGSMASK    VS_FFI_FILEFLAGSMASK
+#ifdef _DEBUG
+ FILEFLAGS        VS_FF_DEBUG
+#else
+ FILEFLAGS        0x0L
+#endif
+ FILEOS           VOS_NT_WINDOWS32
+ FILETYPE         VFT_DLL
+ FILESUBTYPE      VFT2_UNKNOWN
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "0409"
+    BEGIN
+      VALUE "CompanyName",      "Your Own Organization"
+      VALUE "FileDescription",  "Rhino C++ Plugin in CMake for Custom Development"
+      VALUE "FileVersion",      "1.0.0.0"
+      VALUE "InternalName",     "cmake4rhino"
+      VALUE "LegalCopyright",   "Copyright © 2025 Your Name or Company"
+      VALUE "OriginalFilename", "cmake4rhino.rhp"
+      VALUE "ProductName",      "cmake4rhino"
+      VALUE "ProductVersion",   "1.0.0.0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x0409, 1252
+  END
+END
+
+// ------------------------------------------------------------------------------
+// Icon resource
+// ------------------------------------------------------------------------------
+IDI_ICON ICON "F:/cmake4rhino/res/cmake4rhino.ico"
+
+// ------------------------------------------------------------------------------
+// Optionally custom/manual resources here
+// ------------------------------------------------------------------------------
+
+

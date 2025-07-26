@@ -1,0 +1,54 @@
+name: Build CMake Project
+
+on:
+  push:
+    branches: [ build_ci ]
+  pull_request:
+    branches: [ build_ci ]
+  workflow_dispatch:
+
+jobs:
+  build_cmake:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: install CMake
+        run: choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+
+      - name: Install MSVC + MFC
+        run: choco install visualstudio2022community --package-parameters "--includeRecommended --includeOptional --add Microsoft.VisualStudio.Workload.NativeDesktop"
+      - name: Set up MSVC environment
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+      
+      
+      
+      
+
+      - name: download the Rhino SDK msi in powershell
+        run: |
+          $url = "https://files.mcneel.com/dujour/rhino/7.0/en-us/RhinoSDK-7.0.23031.17001.msi"
+          $output = "RhinoSDK-7.0.23031.17001.msi"
+          Invoke-WebRequest -Uri $url -OutFile $output
+
+      - name: Install lessmsi
+        run: choco install lessmsi
+
+      - name: extract msi contents to a folder
+        run: lessmsi x RhinoSDK-7.0.23031.17001.msi
+        shell: powershell
+
+      - name: Print the root of the extracted msi
+        run: ls RhinoSDK-7.0.23031.17001
+        shell: powershell
+
+
+
+
+      - name: Configure CMake
+        run: cmake -S . -B build
+
+      - name: Build
+        run: cmake --build build --config Release
