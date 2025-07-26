@@ -40,7 +40,8 @@ if(NOT MFC_FOUND)
     message(FATAL_ERROR "
         MFC was not found, please install Desktop development with via the Visual
         Studio Installer C++ MFC. Check for the -details- of the installer to enable
-        MFC for newest build tools (86x, 64x)")
+        MFC for newest build tools (86x, 64x). Try also to set the MFC_ROOT flag in
+        the cmake config.")
 else()
     message(STATUS "MFC support enabled via Visual Studio generator.")
 endif()
