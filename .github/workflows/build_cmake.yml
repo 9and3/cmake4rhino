@@ -46,7 +46,7 @@ jobs:
         shell: powershell
 
       - name: Print the root of the extracted msi
-        run: ls rh821sdk_8.21.25188.17001/SourceDir/Rhino 8 SDK
+        run: ls "rh821sdk_8.21.25188.17001/SourceDir/Rhino 8 SDK"
         shell: powershell
 
 
