@@ -1,9 +1,9 @@
-﻿// cmake4rhinoPlugIn.cpp : defines the initialization routines for the plug-in.
+﻿// {{cookiecutter.your_plugin_name}}PlugIn.cpp : defines the initialization routines for the plug-in.
 //
 
 #include "stdafx.h"
 #include "rhinoSdkPlugInDeclare.h"
-#include "cmake4rhinoPlugIn.h"
+#include "{{cookiecutter.your_plugin_name}}PlugIn.h"
 #include "Resource.h"
 
 // The plug-in object must be constructed before any plug-in classes derived
@@ -47,26 +47,26 @@ RHINO_PLUG_IN_DEVELOPER_EMAIL(PLUGIN_EMAIL);
 RHINO_PLUG_IN_DEVELOPER_WEBSITE(PLUGIN_WEBSITE);
 RHINO_PLUG_IN_UPDATE_URL(PLUGIN_UPDATE_URL);
 
-// The one and only Ccmake4rhinoPlugIn object
-static class Ccmake4rhinoPlugIn thePlugIn;
+// The one and only C{{cookiecutter.your_plugin_name}}PlugIn object
+static class C{{cookiecutter.your_plugin_name}}PlugIn thePlugIn;
 
 /////////////////////////////////////////////////////////////////////////////
-// Ccmake4rhinoPlugIn definition
+// C{{cookiecutter.your_plugin_name}}PlugIn definition
 
-Ccmake4rhinoPlugIn& cmake4rhinoPlugIn()
+C{{cookiecutter.your_plugin_name}}PlugIn& {{cookiecutter.your_plugin_name}}PlugIn()
 {
-	// Return a reference to the one and only Ccmake4rhinoPlugIn object
+	// Return a reference to the one and only C{{cookiecutter.your_plugin_name}}PlugIn object
 	return thePlugIn;
 }
 
-Ccmake4rhinoPlugIn::Ccmake4rhinoPlugIn()
+C{{cookiecutter.your_plugin_name}}PlugIn::C{{cookiecutter.your_plugin_name}}PlugIn()
 {
 	// Description:
-	//   Ccmake4rhinoPlugIn constructor. The constructor is called when the
+	//   C{{cookiecutter.your_plugin_name}}PlugIn constructor. The constructor is called when the
 	//   plug-in is loaded and "thePlugIn" is constructed. Once the plug-in
-	//   is loaded, Ccmake4rhinoPlugIn::OnLoadPlugIn() is called. The
+	//   is loaded, C{{cookiecutter.your_plugin_name}}PlugIn::OnLoadPlugIn() is called. The
 	//   constructor should be simple and solid. Do anything that might fail in
-	//   Ccmake4rhinoPlugIn::OnLoadPlugIn().
+	//   C{{cookiecutter.your_plugin_name}}PlugIn::OnLoadPlugIn().
 
 	// TODO: Add construction code here
 	m_plugin_version = RhinoPlugInVersion();
@@ -75,7 +75,7 @@ Ccmake4rhinoPlugIn::Ccmake4rhinoPlugIn()
 /////////////////////////////////////////////////////////////////////////////
 // Required overrides
 
-const wchar_t* Ccmake4rhinoPlugIn::PlugInName() const
+const wchar_t* C{{cookiecutter.your_plugin_name}}PlugIn::PlugInName() const
 {
 	// Description:
 	//   Plug-in name display string.  This name is displayed by Rhino when
@@ -86,7 +86,7 @@ const wchar_t* Ccmake4rhinoPlugIn::PlugInName() const
 	return RhinoPlugInName();
 }
 
-const wchar_t* Ccmake4rhinoPlugIn::PlugInVersion() const
+const wchar_t* C{{cookiecutter.your_plugin_name}}PlugIn::PlugInVersion() const
 {
 	// Description:
 	//   Plug-in version display string. This name is displayed by Rhino
@@ -97,7 +97,7 @@ const wchar_t* Ccmake4rhinoPlugIn::PlugInVersion() const
 	return m_plugin_version;
 }
 
-GUID Ccmake4rhinoPlugIn::PlugInID() const
+GUID C{{cookiecutter.your_plugin_name}}PlugIn::PlugInID() const
 {
 	// Description:
 	//   Plug-in unique identifier. The identifier is used by Rhino to
@@ -111,7 +111,7 @@ GUID Ccmake4rhinoPlugIn::PlugInID() const
 /////////////////////////////////////////////////////////////////////////////
 // Additional overrides
 
-BOOL Ccmake4rhinoPlugIn::OnLoadPlugIn()
+BOOL C{{cookiecutter.your_plugin_name}}PlugIn::OnLoadPlugIn()
 {
 	// Description:
 	//   Called after the plug-in is loaded and the constructor has been
@@ -131,7 +131,7 @@ BOOL Ccmake4rhinoPlugIn::OnLoadPlugIn()
 	return TRUE;
 }
 
-void Ccmake4rhinoPlugIn::OnUnloadPlugIn()
+void C{{cookiecutter.your_plugin_name}}PlugIn::OnUnloadPlugIn()
 {
 	// Description:
 	//    Called one time when plug-in is about to be unloaded. By this time,

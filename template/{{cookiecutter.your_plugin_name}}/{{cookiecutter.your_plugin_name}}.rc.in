@@ -7,8 +7,8 @@
 // Version/Plug-in info
 // ------------------------------------------------------------------------------
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION      1.0.0.0
- PRODUCTVERSION   1.0.0.0
+ FILEVERSION      @PLUGIN_VERSION@
+ PRODUCTVERSION   @PLUGIN_VERSION@
  FILEFLAGSMASK    VS_FFI_FILEFLAGSMASK
 #ifdef _DEBUG
  FILEFLAGS        VS_FF_DEBUG
@@ -23,14 +23,14 @@ BEGIN
   BEGIN
     BLOCK "0409"
     BEGIN
-      VALUE "CompanyName",      "Your Own Organization"
-      VALUE "FileDescription",  "Rhino C++ Plugin in CMake for Custom Development"
-      VALUE "FileVersion",      "1.0.0.0"
-      VALUE "InternalName",     "cmake4rhino"
-      VALUE "LegalCopyright",   "Copyright © 2025 Your Name or Company"
-      VALUE "OriginalFilename", "cmake4rhino.rhp"
-      VALUE "ProductName",      "cmake4rhino"
-      VALUE "ProductVersion",   "1.0.0.0"
+      VALUE "CompanyName",      "@PLUGIN_COMPANY_NAME@"
+      VALUE "FileDescription",  "@PLUGIN_FILE_DESCRIPTION@"
+      VALUE "FileVersion",      "@PLUGIN_VERSION@"
+      VALUE "InternalName",     "@PLUGIN_NAME@"
+      VALUE "LegalCopyright",   "@PLUGIN_LEGAL_COPYRIGHT@"
+      VALUE "OriginalFilename", "@PLUGIN_ORIGINAL_FILENAME@"
+      VALUE "ProductName",      "@PLUGIN_NAME@"
+      VALUE "ProductVersion",   "@PLUGIN_VERSION@"
     END
   END
   BLOCK "VarFileInfo"
@@ -42,7 +42,7 @@ END
 // ------------------------------------------------------------------------------
 // Icon resource
 // ------------------------------------------------------------------------------
-IDI_ICON ICON "F:/cmake4rhino/res/cmake4rhino.ico"
+IDI_ICON ICON "@ICON_PATH@"
 
 // ------------------------------------------------------------------------------
 // Optionally custom/manual resources here

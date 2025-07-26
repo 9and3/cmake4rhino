@@ -1,8 +1,8 @@
-// cmdcmake4rhino.cpp : command file
+// cmd{{cookiecutter.your_plugin_name}}.cpp : command file
 //
 
 #include "stdafx.h"
-#include "cmake4rhinoPlugIn.h"
+#include "{{cookiecutter.your_plugin_name}}PlugIn.h"
 
 // FIXME: this is a personal test code to print debug messages in the console
 #include <windows.h>
@@ -11,33 +11,33 @@
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 //
-// BEGIN cmake4rhino command
+// BEGIN {{cookiecutter.your_plugin_name}} command
 //
 
-#pragma region cmake4rhino command
+#pragma region {{cookiecutter.your_plugin_name}} command
 
-// Do NOT put the definition of class CCommandcmake4rhino in a header
-// file. There is only ONE instance of a CCommandcmake4rhino class
-// and that instance is the static thecmake4rhinoCommand that appears
+// Do NOT put the definition of class CCommand{{cookiecutter.your_plugin_name}} in a header
+// file. There is only ONE instance of a CCommand{{cookiecutter.your_plugin_name}} class
+// and that instance is the static the{{cookiecutter.your_plugin_name}}Command that appears
 // immediately below the class definition.
 
-class CCommandcmake4rhino : public CRhinoCommand
+class CCommand{{cookiecutter.your_plugin_name}} : public CRhinoCommand
 {
 public:
-  // The one and only instance of CCommandcmake4rhino is created below.
+  // The one and only instance of CCommand{{cookiecutter.your_plugin_name}} is created below.
   // No copy constructor or operator= is required.
   // Values of member variables persist for the duration of the application.
 
-  // CCommandcmake4rhino::CCommandcmake4rhino()
-  // is called exactly once when static thecmake4rhinoCommand is created.
-  CCommandcmake4rhino() = default;
+  // CCommand{{cookiecutter.your_plugin_name}}::CCommand{{cookiecutter.your_plugin_name}}()
+  // is called exactly once when static the{{cookiecutter.your_plugin_name}}Command is created.
+  CCommand{{cookiecutter.your_plugin_name}}() = default;
 
-  // CCommandcmake4rhino::~CCommandcmake4rhino()
-  // is called exactly once when static thecmake4rhinoCommand is destroyed.
+  // CCommand{{cookiecutter.your_plugin_name}}::~CCommand{{cookiecutter.your_plugin_name}}()
+  // is called exactly once when static the{{cookiecutter.your_plugin_name}}Command is destroyed.
   // The destructor should not make any calls to the Rhino SDK. 
   // If your command has persistent settings, then override 
   // CRhinoCommand::SaveProfile and CRhinoCommand::LoadProfile.
-  ~CCommandcmake4rhino() = default;
+  ~CCommand{{cookiecutter.your_plugin_name}}() = default;
 
   // Returns a unique UUID for this command.
   // If you try to use an id that is already being used, then
@@ -45,28 +45,28 @@ public:
   UUID CommandUUID() override
   {
     // {0CECE93D-3594-492B-8A29-4B9FB2AF6655}
-    static const GUID cmake4rhinoCommand_UUID = 
+    static const GUID {{cookiecutter.your_plugin_name}}Command_UUID = 
     {0x0cece93d,0x3594,0x492b,{0x8a,0x29,0x4b,0x9f,0xb2,0xaf,0x66,0x55}};
-    return cmake4rhinoCommand_UUID;
+    return {{cookiecutter.your_plugin_name}}Command_UUID;
   }
 
   // Returns the English command name.
   // If you want to provide a localized command name, then override 
   // CRhinoCommand::LocalCommandName.
-  const wchar_t* EnglishCommandName() override { return L"cmake4rhino"; }
+  const wchar_t* EnglishCommandName() override { return L"{{cookiecutter.your_plugin_name}}"; }
 
   // Rhino calls RunCommand to run the command.
   CRhinoCommand::result RunCommand(const CRhinoCommandContext& context) override;
 };
 
-// The one and only CCommandcmake4rhino object
-// Do NOT create any other instance of a CCommandcmake4rhino class.
-static class CCommandcmake4rhino thecmake4rhinoCommand;
+// The one and only CCommand{{cookiecutter.your_plugin_name}} object
+// Do NOT create any other instance of a CCommand{{cookiecutter.your_plugin_name}} class.
+static class CCommand{{cookiecutter.your_plugin_name}} the{{cookiecutter.your_plugin_name}}Command;
 
-CRhinoCommand::result CCommandcmake4rhino::RunCommand(const CRhinoCommandContext& context)
+CRhinoCommand::result CCommand{{cookiecutter.your_plugin_name}}::RunCommand(const CRhinoCommandContext& context)
 {
-  // CCommandcmake4rhino::RunCommand() is called when the user
-  // runs the "cmake4rhino".
+  // CCommand{{cookiecutter.your_plugin_name}}::RunCommand() is called when the user
+  // runs the "{{cookiecutter.your_plugin_name}}".
 
   // TODO: Add command code here.
 
@@ -76,7 +76,7 @@ CRhinoCommand::result CCommandcmake4rhino::RunCommand(const CRhinoCommandContext
   str.Format(L"The \"%s\" has been fired.\n", EnglishCommandName());
   const wchar_t* pszStr = static_cast<const wchar_t*>(str);
   if (context.IsInteractive())
-    RhinoMessageBox(pszStr, cmake4rhinoPlugIn().PlugInName(), MB_OK);
+    RhinoMessageBox(pszStr, {{cookiecutter.your_plugin_name}}PlugIn().PlugInName(), MB_OK);
   else
     RhinoApp().Print(pszStr);
 
@@ -113,7 +113,7 @@ CRhinoCommand::result CCommandcmake4rhino::RunCommand(const CRhinoCommandContext
 #pragma endregion
 
 //
-// END cmake4rhino command
+// END {{cookiecutter.your_plugin_name}} command
 //
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////

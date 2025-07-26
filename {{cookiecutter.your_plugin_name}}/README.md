@@ -3,7 +3,7 @@
     <img src="~logo/logo_txt_900_rect.png" width="300">
 </p>
 <!-- <p align="center">
-    <img src="https://github.com/9and3/cmake4rhino/actions/workflows/build_cookietemplate.yml/badge.svg">
+    <img src="https://github.com/9and3/{{cookiecutter.your_plugin_name}}/actions/workflows/build_cookietemplate.yml/badge.svg">
 </p> -->
 
 
@@ -50,26 +50,26 @@ The template is distributed as a [cookiecutter](https://github.com/cookiecutter/
   <tr>
     <td style="text-align:center;">Downloadable Template</td>
     <td style="text-align:center;">
-      <a href="https://github.com/9and3/cmake4rhino/actions/workflows/build_cookietemplate.yml">
-        <img src="https://github.com/9and3/cmake4rhino/actions/workflows/build_cookietemplate.yml/badge.svg">
+      <a href="https://github.com/9and3/{{cookiecutter.your_plugin_name}}/actions/workflows/build_cookietemplate.yml">
+        <img src="https://github.com/9and3/{{cookiecutter.your_plugin_name}}/actions/workflows/build_cookietemplate.yml/badge.svg">
       </a>
     </td>
     <td style="text-align:center;">
-      <a href="https://github.com/9and3/cmake4rhino/tree/cookietemplate">cookietemplate</a>
+      <a href="https://github.com/9and3/{{cookiecutter.your_plugin_name}}/tree/cookietemplate">cookietemplate</a>
     </td>
     <td style="text-align:center;">
-      <code>cookiecutter gh:9and3/cmake4rhino --checkout cookietemplate</code>
+      <code>cookiecutter gh:9and3/{{cookiecutter.your_plugin_name}} --checkout cookietemplate</code>
     </td>
   </tr>
   <tr>
     <td style="text-align:center;">CMake/VS17-2022/Rhino8SDK build</td>
     <td style="text-align:center;">
-      <a href="https://github.com/9and3/cmake4rhino/actions/workflows/build_cmake.yml">
-        <img src="https://github.com/9and3/cmake4rhino/actions/workflows/build_cmake.yml/badge.svg">
+      <a href="https://github.com/9and3/{{cookiecutter.your_plugin_name}}/actions/workflows/build_cmake.yml">
+        <img src="https://github.com/9and3/{{cookiecutter.your_plugin_name}}/actions/workflows/build_cmake.yml/badge.svg">
       </a>
     </td>
     <td style="text-align:center;">
-      <a href="https://github.com/9and3/cmake4rhino/tree/Main">Main</a>
+      <a href="https://github.com/9and3/{{cookiecutter.your_plugin_name}}/tree/Main">Main</a>
     </td>
     <td style="text-align:center;">
       <code>..</code>
@@ -87,14 +87,14 @@ You can download the template with the following command in a terminal:
 
 ```bash
 pip install cookiecutter
-cookiecutter gh:9and3/cmake4rhino --checkout cookietemplate
+cookiecutter gh:9and3/{{cookiecutter.your_plugin_name}} --checkout cookietemplate
 ```
 When asked, change the project name with your plug-in name.
 
 #### Project information
 The remaining information to change can be found in the `CMakeLists.txt` file to be filled with your project information, such as the name, version, author, etc:
 
-https://github.com/9and3/cmake4rhino/blob/5d0722a11a8476ff51b25dceda3b8a25a282155d/CMakeLists.txt#L20-L31
+https://github.com/9and3/{{cookiecutter.your_plugin_name}}/blob/5d0722a11a8476ff51b25dceda3b8a25a282155d/CMakeLists.txt#L20-L31
 
 #### Logo
 The logo should be replaced in the `res/` folder with your own (remember 256-pixel square `.ico` file).

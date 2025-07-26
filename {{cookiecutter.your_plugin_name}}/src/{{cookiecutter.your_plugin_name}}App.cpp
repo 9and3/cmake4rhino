@@ -1,8 +1,8 @@
-// cmake4rhino.cpp : Defines the initialization routines for the DLL.
+// {{cookiecutter.your_plugin_name}}.cpp : Defines the initialization routines for the DLL.
 //
 
 #include "stdafx.h"
-#include "cmake4rhinoApp.h"
+#include "{{cookiecutter.your_plugin_name}}App.h"
 
 //
 //	Note!
@@ -33,34 +33,34 @@
 //		details.
 //
 
-// Ccmake4rhinoApp
+// C{{cookiecutter.your_plugin_name}}App
 
-BEGIN_MESSAGE_MAP(Ccmake4rhinoApp, CWinApp)
+BEGIN_MESSAGE_MAP(C{{cookiecutter.your_plugin_name}}App, CWinApp)
 END_MESSAGE_MAP()
 
-// The one and only Ccmake4rhinoApp object
-Ccmake4rhinoApp theApp;
+// The one and only C{{cookiecutter.your_plugin_name}}App object
+C{{cookiecutter.your_plugin_name}}App theApp;
 
-// Ccmake4rhinoApp initialization
+// C{{cookiecutter.your_plugin_name}}App initialization
 
-BOOL Ccmake4rhinoApp::InitInstance()
+BOOL C{{cookiecutter.your_plugin_name}}App::InitInstance()
 {
   // CRITICAL: DO NOT CALL RHINO SDK FUNCTIONS HERE!
   // Only standard MFC DLL instance initialization belongs here. 
   // All other significant initialization should take place in
-  // Ccmake4rhinoPlugIn::OnLoadPlugIn().
+  // C{{cookiecutter.your_plugin_name}}PlugIn::OnLoadPlugIn().
 
 	CWinApp::InitInstance();
 
 	return TRUE;
 }
 
-int Ccmake4rhinoApp::ExitInstance()
+int C{{cookiecutter.your_plugin_name}}App::ExitInstance()
 {
   // CRITICAL: DO NOT CALL RHINO SDK FUNCTIONS HERE!
   // Only standard MFC DLL instance clean up belongs here. 
   // All other significant cleanup should take place in either
-  // Ccmake4rhinoPlugIn::OnSaveAllSettings() or
-  // Ccmake4rhinoPlugIn::OnUnloadPlugIn().
+  // C{{cookiecutter.your_plugin_name}}PlugIn::OnSaveAllSettings() or
+  // C{{cookiecutter.your_plugin_name}}PlugIn::OnUnloadPlugIn().
   return CWinApp::ExitInstance();
 }
