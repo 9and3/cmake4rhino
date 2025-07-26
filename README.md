@@ -31,9 +31,9 @@ The template is distributed as a [cookiecutter](https://github.com/cookiecutter/
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg" width="18" style="vertical-align:middle; margin-left:4px;"/>
     Windows
     </td>
-    <td style="text-align:center;">Visual Studio 16 2019 <img src="https://img.shields.io/badge/-not%20tested-orange?style=for-the-badg&logo=visualstudiocode&logoColor=white"/> <br> Visual Studio 17 2022 <img src="https://img.shields.io/badge/-supported-brightgreen?style=for-the-badg&logo=visualstudiocode&logoColor=white"/></td>
-    <td style="text-align:center;">Rhino 6 <img src="https://img.shields.io/badge/-not%20supported-red?style=for-the-badg"/> <br> Rhino 7 <img src="https://img.shields.io/badge/-not%20tested-orange?style=for-the-badg"/> <br> Rhino 8 <img src="https://img.shields.io/badge/-supported-brightgreen?style=for-the-badg"/></td>
-    <td style="text-align:center;">3.15+ <img src="https://img.shields.io/badge/-supported-brightgreen?style=for-the-badg"/></td>
+    <td style="text-align:center;">Visual Studio 16 2019 <img src="https://img.shields.io/badge/-not%20tested-orange?style=for-the-badg&logo=visualstudiocode&logoColor=white"/> <br> Visual Studio 17 2022 <img src="https://img.shields.io/badge/-tested-brightgreen?style=for-the-badg&logo=visualstudiocode&logoColor=white"/></td>
+    <td style="text-align:center;">Rhino 6 <img src="https://img.shields.io/badge/-not%20supported-red?style=for-the-badg"/> <br> Rhino 7 <img src="https://img.shields.io/badge/-not%20tested-orange?style=for-the-badg"/> <br> Rhino 8 <img src="https://img.shields.io/badge/-tested-brightgreen?style=for-the-badg"/></td>
+    <td style="text-align:center;">3.15+ <img src="https://img.shields.io/badge/-tested-brightgreen?style=for-the-badg"/></td>
   </tr>
 </table>
 
