@@ -2,35 +2,20 @@ name: cmake-build
 
 on:
   push:
-    branches: [ build_ci ]
+    branches: [ Main ]
   pull_request:
-    branches: [ build_ci ]
+    branches: [ Main ]
   workflow_dispatch:
 
-# TODO: this is a test
 env:
-  BUILD_TYPE: Release
   VCPKG_FILE: c:/vcpkg/scripts/buildsystems/vcpkg.cmake
 
 jobs:
-  build_cmake:
+  download-build:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      # - name: install CMake
-      #   run: choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
-
-      # - name: Install MSVC + MFC
-      #   run: choco install visualstudio2022community --package-parameters "--includeRecommended --includeOptional --add Microsoft.VisualStudio.Workload.NativeDesktop"
-      # - name: Set up MSVC environment
-      #   run: |
-      #     call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
-      
-      
-      
-      
 
       - name: download the Rhino SDK msi in powershell
         run: |
@@ -38,29 +23,21 @@ jobs:
           $output = "rh821sdk_8.21.25188.17001.msi"
           Invoke-WebRequest -Uri $url -OutFile $output
 
-      - name: Install lessmsi
-        run: choco install lessmsi
-
-      - name: extract msi contents to a folder
-        run: lessmsi x rh821sdk_8.21.25188.17001.msi
-        shell: powershell
-
-      - name: Print the root of the extracted msi
-        run: ls "rh821sdk_8.21.25188.17001/SourceDir/Rhino 8 SDK"
-        shell: powershell
-
-      - name: List SDK contents
-        run: ls "$PWD\rh821sdk_8.21.25188.17001\SourceDir\Rhino 8 SDK"
+      - name: Install and extract Rhino SDK .msi with lessmsi
+        run: |
+          choco install lessmsi
+          lessmsi x rh821sdk_8.21.25188.17001.msi
+          ls "rh821sdk_8.21.25188.17001/SourceDir/Rhino 8 SDK"
         shell: pwsh
 
-      - name: Configure CMake
+      - name: Configure CMake project
         run: |
           $sdkRoot = "$PWD\\rh821sdk_8.21.25188.17001\\SourceDir\\Rhino 8 SDK"
           cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DRHINO_DEBUG_PLUGIN=OFF -DRHINO8SDK_ROOT="$sdkRoot"
         shell: pwsh
         working-directory: ${{ github.workspace }}
-
-      - name: Build
+ 
+      - name: Build CMake project
         run: cmake --build build --config Release
 
 
