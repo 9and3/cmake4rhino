@@ -35,25 +35,25 @@ jobs:
       - name: download the Rhino SDK msi in powershell
         run: |
           $url = "https://files.mcneel.com/dujour/exe/202507/rh821sdk_8.21.25188.17001.msi"
-          $output = "RhinoSDK-7.0.23031.17001.msi"
+          $output = "rh821sdk_8.21.25188.17001.msi"
           Invoke-WebRequest -Uri $url -OutFile $output
 
       - name: Install lessmsi
         run: choco install lessmsi
 
       - name: extract msi contents to a folder
-        run: lessmsi x RhinoSDK-7.0.23031.17001.msi
+        run: lessmsi x rh821sdk_8.21.25188.17001.msi
         shell: powershell
 
       - name: Print the root of the extracted msi
-        run: ls RhinoSDK-7.0.23031.17001
+        run: ls rh821sdk_8.21.25188.17001
         shell: powershell
 
 
 
 
       - name: Configure CMake
-        run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DRHINO_DEBUG_PLUGIN=OFF -DRHINO8_SDK_ROOT="$(pwd)/RhinoSDK-7.0.23031.17001"
+        run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DRHINO_DEBUG_PLUGIN=OFF -DRHINO8_SDK_ROOT="$(pwd)/rh821sdk_8.21.25188.17001/SourceDir/Rhino 8 SDK"
 
       - name: Build
         run: cmake --build build --config Release
