@@ -1,4 +1,4 @@
-name: Build CMake Project
+name: cmake-build
 
 on:
   push:
@@ -7,6 +7,11 @@ on:
     branches: [ build_ci ]
   workflow_dispatch:
 
+# TODO: this is a test
+env:
+  BUILD_TYPE: Release
+  VCPKG_FILE: c:/vcpkg/scripts/buildsystems/vcpkg.cmake
+
 jobs:
   build_cmake:
     runs-on: windows-latest
@@ -14,14 +19,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: install CMake
-        run: choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+      # - name: install CMake
+      #   run: choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
 
-      - name: Install MSVC + MFC
-        run: choco install visualstudio2022community --package-parameters "--includeRecommended --includeOptional --add Microsoft.VisualStudio.Workload.NativeDesktop"
-      - name: Set up MSVC environment
-        run: |
-          call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+      # - name: Install MSVC + MFC
+      #   run: choco install visualstudio2022community --package-parameters "--includeRecommended --includeOptional --add Microsoft.VisualStudio.Workload.NativeDesktop"
+      # - name: Set up MSVC environment
+      #   run: |
+      #     call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
       
       
       
@@ -48,7 +53,9 @@ jobs:
 
 
       - name: Configure CMake
-        run: cmake -S . -B build
+        run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DRHINO_DEBUG_PLUGIN=OFF -DRHINO8_SDK_ROOT="$(pwd)/RhinoSDK-7.0.23031.17001"
 
       - name: Build
         run: cmake --build build --config Release
+
+
