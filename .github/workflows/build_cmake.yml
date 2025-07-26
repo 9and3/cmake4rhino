@@ -34,7 +34,7 @@ jobs:
 
       - name: download the Rhino SDK msi in powershell
         run: |
-          $url = "https://files.mcneel.com/dujour/rhino/7.0/en-us/RhinoSDK-7.0.23031.17001.msi"
+          $url = "https://files.mcneel.com/dujour/exe/202507/rh821sdk_8.21.25188.17001.msi"
           $output = "RhinoSDK-7.0.23031.17001.msi"
           Invoke-WebRequest -Uri $url -OutFile $output
 
