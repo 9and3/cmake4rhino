@@ -46,7 +46,7 @@ jobs:
         shell: powershell
 
       - name: Print the root of the extracted msi
-        run: ls rh821sdk_8.21.25188.17001
+        run: ls rh821sdk_8.21.25188.17001/SourceDir/Rhino 8 SDK
         shell: powershell
 
 
@@ -58,8 +58,9 @@ jobs:
 
       - name: Configure CMake
         run: |
-          $sdkRoot = "$PWD\\rh821sdk_8.21.25188.17001\\SourceDir\\Rhino 8 SDK"
-          cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DRHINO_DEBUG_PLUGIN=OFF -DRHINO8_SDK_ROOT="$sdkRoot"
+          cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DRHINO_DEBUG_PLUGIN=OFF -DRHINO8_SDK_ROOT="rh821sdk_8.21.25188.17001\SourceDir\Rhino 8 SDK\"
+        shell: pwsh
+        working-directory: ${{ github.workspace }}
 
       - name: Build
         run: cmake --build build --config Release
