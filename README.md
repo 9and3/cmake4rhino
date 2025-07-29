@@ -105,11 +105,11 @@ Check-in your folder:
 ```bash
 cd <your-genereated-project-folder>
 ```
-For debug build
+For debug build:
 ```bash
 cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DRHINO_DEBUG_PLUGIN=ON; cmake --build build --config Debug
 ```
-
+or release:
 ```bash
 cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DRHINO_DEBUG_PLUGIN=ON; cmake --build build --config Release
 ```
