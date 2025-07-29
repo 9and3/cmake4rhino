@@ -62,7 +62,7 @@ configure_file(
 # src/headers and .rhp (aka .dll)
 add_library(${PLUGIN_NAME} SHARED)
 
-file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
+file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
 file(GLOB WIN32_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 ${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.rc
 ${CMAKE_CURRENT_SOURCE_DIR}/res/${PLUGIN_NAME}.rc
@@ -72,7 +72,11 @@ ${SOURCES}
 ${WIN32_RESOURCES}
 )
 
-target_include_directories(${PLUGIN_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+# FIXME: check that the CMake4Rhnio directory is replaced by cookiecutter
+target_include_directories(${PLUGIN_NAME} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/CMake4Rhino
+)
 target_precompile_headers(${PLUGIN_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h)
 
 set_target_properties(${PLUGIN_NAME} PROPERTIES SUFFIX ".rhp")

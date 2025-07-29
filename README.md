@@ -37,7 +37,6 @@ The template is distributed as a [cookiecutter](https://github.com/cookiecutter/
   </tr>
 </table>
 
-<!-- TODO: add the badge for the CI building for the cmake project -->
 ##### CI status:
 
 <table width="100%">

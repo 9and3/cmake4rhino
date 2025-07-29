@@ -4,7 +4,10 @@
 #include "stdafx.h"
 #include "cmake4rhinoPlugIn.h"
 
-// FIXME: this is a personal test code to print debug messages in the console
+// Include any cusstom libraries or your own headers here
+#include "CMake4Rhino/dummyLibFile.h"
+
+// This is a personal test code to print debug messages in the console
 #include <windows.h>
 #include <iostream>
 
@@ -88,6 +91,12 @@ CRhinoCommand::result CCommandcmake4rhino::RunCommand(const CRhinoCommandContext
   RhinoApp().Print(L"Release-mode message from Rhino plug-in (Rhino console)\n");
 #endif
 
+  // FIXME: see integration with cookiecutter
+  // Call a function from the dummy library to test if it works
+  ON_Sphere sphere = CMake4Rhino::DummyFunctions::DummySphere(5.0f);
+  ON_Brep* pBrep = ON_BrepSphere(sphere);
+  CRhinoBrepObject* brep_object = context.m_doc.AddBrepObject(*pBrep);
+  context.m_doc.Redraw();
 
   // add a simple curve circle to test geometries
   ON_3dPoint center(0, 0, 0);
