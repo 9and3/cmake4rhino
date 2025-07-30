@@ -1,5 +1,5 @@
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-# Author: 2025 Andrea Settimi, cmake4rhino
+# Author: 2025 Andrea Settimi, {{cookiecutter.your_plugin_name}}
 # Distributed under the MIT License.
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -18,7 +18,7 @@ set(PLUGIN_VERSION_BUILD 0)
 set(PLUGIN_VERSION "${PLUGIN_VERSION_MAJOR}.${PLUGIN_VERSION_MINOR}.${PLUGIN_VERSION_PATCH}.${PLUGIN_VERSION_BUILD}")
 
 set(PLUGIN_COMPANY_NAME "Your Own Organization")
-set(PLUGIN_NAME "cmake4rhino")
+set(PLUGIN_NAME "{{cookiecutter.your_plugin_name}}")
 set(PLUGIN_ADDRESS "123 Developer Street City State 12345-6789")
 set(PLUGIN_COUNTRY "My Country")
 set(PLUGIN_PHONE "123-456-7890")

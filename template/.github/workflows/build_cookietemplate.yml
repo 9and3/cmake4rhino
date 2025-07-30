@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up PAT
-        run: git remote set-url origin https://x-access-token:${{ secrets.ADMIN_CICD_TOKEN }}@github.com/9and3/cmake4rhino.git
+        run: git remote set-url origin https://x-access-token:${{ secrets.ADMIN_CICD_TOKEN }}@github.com/9and3/{{cookiecutter.your_plugin_name}}.git
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -36,17 +36,17 @@ jobs:
           cd template
           
           # Replace all occurrences in file contents
-          find . -type f -exec sed -i 's/cmake4rhino/{{cookiecutter.your_plugin_name}}/g' {} +
-          # Rename files and folders: cmake4rhino* -> {{cookiecutter.your_plugin_name}}*
-          find . -depth -name '*cmake4rhino*' -exec bash -c '
+          find . -type f -exec sed -i 's/{{cookiecutter.your_plugin_name}}/{{cookiecutter.your_plugin_name}}/g' {} +
+          # Rename files and folders: {{cookiecutter.your_plugin_name}}* -> {{cookiecutter.your_plugin_name}}*
+          find . -depth -name '*{{cookiecutter.your_plugin_name}}*' -exec bash -c '
             src="$0"
-            dst=$(echo "$src" | sed "s/cmake4rhino/{{cookiecutter.your_plugin_name}}/g")
+            dst=$(echo "$src" | sed "s/{{cookiecutter.your_plugin_name}}/{{cookiecutter.your_plugin_name}}/g")
             mv "$src" "$dst"
           ' {} \;
 
           # Add cookiecutter.json (no trailing comma)
           echo '{
-            "your_plugin_name": "cmake4rhino"
+            "your_plugin_name": "{{cookiecutter.your_plugin_name}}"
           }' > cookiecutter.json
 
           # Move all files except cookiecutter.json into the your_plugin_name directory

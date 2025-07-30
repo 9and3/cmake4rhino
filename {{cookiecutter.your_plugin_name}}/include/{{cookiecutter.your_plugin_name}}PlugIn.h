@@ -1,28 +1,28 @@
-// cmake4rhinoPlugIn.h : main header file for the cmake4rhino plug-in.
+// {{cookiecutter.your_plugin_name}}PlugIn.h : main header file for the {{cookiecutter.your_plugin_name}} plug-in.
 //
 
 #pragma once
 
-// Ccmake4rhinoPlugIn
-// See cmake4rhinoPlugIn.cpp for the implementation of this class
+// C{{cookiecutter.your_plugin_name}}PlugIn
+// See {{cookiecutter.your_plugin_name}}PlugIn.cpp for the implementation of this class
 //
 
-class Ccmake4rhinoPlugIn : public CRhinoUtilityPlugIn
+class C{{cookiecutter.your_plugin_name}}PlugIn : public CRhinoUtilityPlugIn
 {
 public:
-  // Ccmake4rhinoPlugIn constructor. The constructor is called when the
+  // C{{cookiecutter.your_plugin_name}}PlugIn constructor. The constructor is called when the
   // plug-in is loaded and "thePlugIn" is constructed. Once the plug-in
-  // is loaded, Ccmake4rhinoPlugIn::OnLoadPlugIn() is called. The
+  // is loaded, C{{cookiecutter.your_plugin_name}}PlugIn::OnLoadPlugIn() is called. The
   // constructor should be simple and solid. Do anything that might fail in
-  // Ccmake4rhinoPlugIn::OnLoadPlugIn().
-  Ccmake4rhinoPlugIn();
+  // C{{cookiecutter.your_plugin_name}}PlugIn::OnLoadPlugIn().
+  C{{cookiecutter.your_plugin_name}}PlugIn();
   
-  // Ccmake4rhinoPlugIn destructor. The destructor is called to destroy
+  // C{{cookiecutter.your_plugin_name}}PlugIn destructor. The destructor is called to destroy
   // "thePlugIn" when the plug-in is unloaded. Immediately before the
-  // DLL is unloaded, Ccmake4rhinoPlugIn::OnUnloadPlugin() is called. Do
+  // DLL is unloaded, C{{cookiecutter.your_plugin_name}}PlugIn::OnUnloadPlugin() is called. Do
   // not do too much here. Be sure to clean up any memory you have allocated
   // with onmalloc(), onrealloc(), oncalloc(), or onstrdup().
-  ~Ccmake4rhinoPlugIn() = default;
+  ~C{{cookiecutter.your_plugin_name}}PlugIn() = default;
 
   // Required overrides
   
@@ -61,8 +61,8 @@ private:
   // TODO: Add additional class information here
 };
 
-// Return a reference to the one and only Ccmake4rhinoPlugIn object
-Ccmake4rhinoPlugIn& cmake4rhinoPlugIn();
+// Return a reference to the one and only C{{cookiecutter.your_plugin_name}}PlugIn object
+C{{cookiecutter.your_plugin_name}}PlugIn& {{cookiecutter.your_plugin_name}}PlugIn();
 
 
 
