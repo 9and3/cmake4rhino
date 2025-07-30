@@ -59,33 +59,26 @@ configure_file(
     @ONLY
 )
 
-# src/headers and .rhp (aka .dll)
-add_library(${PLUGIN_NAME} SHARED)
+add_library(${PLUGIN_NAME} SHARED)  # .dll (aka .rhp later)
 
 file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
 file(GLOB WIN32_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.rc
-${CMAKE_CURRENT_SOURCE_DIR}/res/${PLUGIN_NAME}.rc
+    ${PLUGIN_NAME}.rc
+    res/${PLUGIN_NAME}.rc
 )
-target_sources(${PLUGIN_NAME} PRIVATE
-${SOURCES}
-${WIN32_RESOURCES}
+target_sources(${PLUGIN_NAME} PUBLIC
+    ${SOURCES}
+    ${WIN32_RESOURCES}
 )
 
-# FIXME: check that the CMake4Rhnio directory is replaced by cookiecutter
-target_include_directories(${PLUGIN_NAME} PRIVATE
+target_include_directories(${PLUGIN_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/CMake4Rhino
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/CMake4Rhino  # FIXME: check that the CMake4Rhnio directory is replaced by cookiecutter
 )
-target_precompile_headers(${PLUGIN_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h)
-
-set_target_properties(${PLUGIN_NAME} PROPERTIES SUFFIX ".rhp")
-set_target_properties(${PLUGIN_NAME} PROPERTIES
-RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
-)
+target_precompile_headers(${PLUGIN_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h)
 
 # pre-processor data for the plugin
-target_compile_definitions(${PLUGIN_NAME} PRIVATE
+target_compile_definitions(${PLUGIN_NAME} PUBLIC
     PLUGIN_VERSION="${PLUGIN_VERSION}"
     PLUGIN_COMPANY_NAME=L\"${PLUGIN_COMPANY_NAME}\"
     PLUGIN_FILEVERSION_STR=L\"${PLUGIN_VERSION_MAJOR}, ${PLUGIN_VERSION_MINOR}, ${PLUGIN_VERSION_PATCH}, ${PLUGIN_VERSION_BUILD}\"
@@ -121,8 +114,8 @@ set(CMAKE_MFC_FLAG 2)
 
 # Rhino 8 SDK
 find_package(Rhino8SDK REQUIRED)
-target_include_directories(${PLUGIN_NAME} PRIVATE ${RHINO8SDK_INCLUDE_DIR})
-target_link_libraries(${PLUGIN_NAME} PRIVATE
+target_include_directories(${PLUGIN_NAME} PUBLIC ${RHINO8SDK_INCLUDE_DIR})
+target_link_libraries(${PLUGIN_NAME} PUBLIC
     ${RHINO8SDK_LIB_DIR}/RhinoCore.lib
     ${RHINO8SDK_LIB_DIR}/RhinoLibrary.lib
     ${RHINO8SDK_LIB_DIR}/rdk.lib
@@ -130,7 +123,7 @@ target_link_libraries(${PLUGIN_NAME} PRIVATE
 )
 
 # Define required preprocessor macros
-target_compile_definitions(${PLUGIN_NAME} PRIVATE
+target_compile_definitions(${PLUGIN_NAME} PUBLIC
     WIN64
     _WINDOWS
     _USRDLL
@@ -138,15 +131,38 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE
     UNICODE
     RHINO_LIB_DIR=${RHINO8SDK_LIB_DIR}
 )
-target_compile_options(${PLUGIN_NAME} PRIVATE /UWIN32)  # Add this to undefine WIN64
+target_compile_options(${PLUGIN_NAME} PUBLIC /UWIN32)  # Add this to undefine WIN64
 
 # Set the precompiled variables for Debug/Release mode for VS multigeneator
-target_compile_definitions(${PLUGIN_NAME} PRIVATE
+target_compile_definitions(${PLUGIN_NAME} PUBLIC
     $<$<CONFIG:Debug>:_DEBUG;RHINO_DEBUG_PLUGIN>
 )
-target_compile_definitions(${PLUGIN_NAME} PRIVATE
+target_compile_definitions(${PLUGIN_NAME} PUBLIC
     $<$<CONFIG:Release>:NDEBUG>
 )
+
+
+# Change the .dll to .rhp so Rhino can load it
+set_target_properties(${PLUGIN_NAME} PROPERTIES SUFFIX ".rhp")
+set_target_properties(${PLUGIN_NAME} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+)
+
+# --------------------------------------------------------------------------------------------------------------------------
+# Tests
+# --------------------------------------------------------------------------------------------------------------------------
+# TODO: ongoing
+
+# enable_testing()
+add_subdirectory(tests)  # FIXME: to update when moved to subdir
+
+
+
+
+# add_dependencies(run_tests cmake4rhino_tests)
+
+
+
 
 # --------------------------------------------------------------------------------------------------------------------------
 # Post-build steps
@@ -161,3 +177,5 @@ if (RUN_POSTBUILD_RHINO)
     )
     add_dependencies(run_rhino ${PLUGIN_NAME})
 endif()
+message(STATUS "==========================================================================================================")
+
