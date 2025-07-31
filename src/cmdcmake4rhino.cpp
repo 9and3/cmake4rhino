@@ -5,7 +5,7 @@
 #include "cmake4rhinoPlugIn.h"
 
 // Include any cusstom libraries or your own headers here
-#include "CMake4Rhino/dummyLibFile.h"
+#include "CMake4Rhino/dummyLibFile.h"  // FIXME: disable for testing
 
 // This is a personal test code to print debug messages in the console
 #include <windows.h>

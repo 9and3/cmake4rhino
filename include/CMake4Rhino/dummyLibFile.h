@@ -2,6 +2,7 @@
 
 #include "stdafx.h"
 
+
 namespace CMake4Rhino
 {
   namespace DummyFunctions
