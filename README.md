@@ -12,6 +12,11 @@ It is tested to work with Rhino 8 and 7 SDKs, VSCode and MSVC 2019 and 2022 . Al
 
 The template is distributed as a [cookiecutter](https://github.com/cookiecutter/cookiecutter) template, which can be used to generate a new project with the desired name and settings. Have fun cmakers!
 
+<p align="center">
+  <img src="assets/record_exp.gif" width="700" alt="Install Lgif" style="margin-bottom:0;">
+</p>
+
+
 <br>
 
 ##### Supported Toolchains & Platforms:
