@@ -10,12 +10,12 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# FIXME: find a good logic with CI integration for logo
-add_executable(cmake-sticker ${CMAKE_SOURCE_DIR}/~logo/cmake-sticker.cc)
-set_target_properties(cmake-sticker PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/cmake"
-    OUTPUT_NAME "cmake-sticker"
-)
+# # FIXME: find a good logic with CI integration for logo
+# add_executable(cmake-sticker ${CMAKE_SOURCE_DIR}/~logo/cmake-sticker.cc)
+# set_target_properties(cmake-sticker PROPERTIES
+#     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/cmake"
+#     OUTPUT_NAME "cmake-sticker"
+# )
 
 # TODO: print logo, this should be implemented
 message(STATUS  " ")
