@@ -96,24 +96,19 @@ add_library(${PLUGIN_CORE} STATIC)  # .lib
 
 # FIXME: fix this part we need to differentiate between the plugin core and the plugin itself for src (there are entry points for plugin)
 # file(GLOB_RECURSE PLUGIN_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
-set(PLUGIN_SOURCES
-    src/cmake4rhinoApp.cpp
-    # src/cmake4rhinoPlugIn.cpp  # <-- this is the entry point of the .rhp plugin
-    # src/cmdcmake4rhino.cpp
-    src/stdafx.cpp
-    src/CMake4Rhino/dummyLibFile.cpp
-)
+file(GLOB_RECURSE GLOB_RECURSE_CORE_LIB_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/CMake4Rhino/*.cpp")
 
+message(STATUS "Found ${GLOB_RECURSE_CORE_LIB_SOURCES} as core library sources")
 
 target_sources(${PLUGIN_CORE} PUBLIC
-    ${PLUGIN_SOURCES}
+    src/cmake4rhinoApp.cpp
+    src/stdafx.cpp
+    ${GLOB_RECURSE_CORE_LIB_SOURCES}
 )
 
 # Rhino 8 SDK
 find_package(Rhino8SDK REQUIRED)
 target_link_libraries(${PLUGIN_CORE} PUBLIC RHINO_CORE_INTERFACE)
-
-
 
 target_include_directories(${PLUGIN_CORE} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -142,20 +137,35 @@ target_compile_definitions(${PLUGIN_CORE} PUBLIC
 
 
 
-# # Change the .dll to .rhp so Rhino can load it
-# add_library(${PLUGIN_RHP} SHARED)  # .dll (aka .rhp later)
-# target_link_libraries(${PLUGIN_RHP} PRIVATE ${PLUGIN_CORE})
-# set_target_properties(${PLUGIN_RHP} PROPERTIES SUFFIX ".rhp")
-# set_target_properties(${PLUGIN_RHP} PROPERTIES
-#     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
-# )
-# file(GLOB WIN32_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-#     ${PLUGIN_NAME}.rc
-#     res/${PLUGIN_NAME}.rc
-# )
-# target_sources(${PLUGIN_RHP} PUBLIC
-#     ${WIN32_RESOURCES}
-# )
+# Change the .dll to .rhp so Rhino can load it
+add_library(${PLUGIN_RHP} SHARED)  # .dll (aka .rhp later)
+function(get_cmd_sources out_var)
+    file(GLOB CMD_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/cmd*.cpp")
+    set(${out_var} ${CMD_SOURCES} PARENT_SCOPE)
+endfunction()
+
+
+# FIXME: we need a check that no other than cmdd files should be in the root src
+get_cmd_sources(CMD_SOURCES)
+target_sources(${PLUGIN_RHP} PRIVATE
+    src/cmake4rhinoPlugIn.cpp  # <-- this is the entry point of the .rhp plugin
+    ${CMD_SOURCES}
+)
+message(STATUS "Found ${CMD_SOURCES} as command sources")  # TODO: test see if keeping, there should be a check only for cmd in root
+
+
+target_link_libraries(${PLUGIN_RHP} PRIVATE ${PLUGIN_CORE})
+set_target_properties(${PLUGIN_RHP} PROPERTIES SUFFIX ".rhp")
+set_target_properties(${PLUGIN_RHP} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+)
+file(GLOB WIN32_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    ${PLUGIN_NAME}.rc
+    res/${PLUGIN_NAME}.rc
+)
+target_sources(${PLUGIN_RHP} PUBLIC
+    ${WIN32_RESOURCES}
+)
 
 # ----------------------------------------------------------------------------------------------------------------------------------------
 # >>> Insert additional dependencies and options >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
