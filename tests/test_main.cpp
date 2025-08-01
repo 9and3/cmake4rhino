@@ -10,13 +10,9 @@ int main(int argc, char **argv) {
     std::cout << "ON_3dPoint center: (" << center.x << ", " << center.y << ", " << center.z << ")" << std::endl;
     ON_Sphere sphere = CMake4Rhino::DummyFunctions::DummySphere(5.0f);
     std::cout << "DummySphere test executed successfully." << std::endl;
+    
+    
+    
+    
     return 0;
 }
-
-
-// #include <cstdio>
-
-// int main() {
-//     printf("Test runner started!\n");
-//     return 0;
-// }
