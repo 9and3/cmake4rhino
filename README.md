@@ -1,31 +1,9 @@
-
-<body><pre align="center" style="font-family:monospace; font-size:11.5px; line-height:1.1; white-space:pre-wrap; word-break:break-all; color:#d7d7d7ff;">                                                                           
-<span style="color: #f0f0f0ff;">                  _                                                        
-            _w@@@@@@l  _                                                   
-             @@@@@@@@  8@@_                                                
-             &apos;@@@@@@|  @@@@g                         </span><span style="color: #0087FF;">,  </span><span style="color: #C50F1F;">,                  
-              </span><span style="color: #d7d7d7ff;">@@@@@@   @@@@@@                       </span><span style="color: #0087FF;">,@| </span><span style="color: #C50F1F;">@,                 
-             </span><span style="color: #c9c9c9ff;">|@@@@@F  @@@@@@@g                     </span><span style="color: #0087FF;">,@@| </span><span style="color: #C50F1F;">[@,                
-             </span><span style="color: #b8b8b8ff;">@@@@@9  j@@@@@@@@                    </span><span style="color: #0087FF;">_@@@g </span><span style="color: #C50F1F;">|@@\               
-     </span><span style="color: #9d9d9dff;">_____  g@@@@/  g@@@@@@@&quot;                    </span><span style="color: #0087FF;">/@@@@@ </span><span style="color: #C50F1F;">|@@@L              
-   </span><span style="color: #929292ff;">.@@@@@@@@@@@@  _@@@@@B&quot;  _g@                 </span><span style="color: #0087FF;">/@@@@@&apos;  </span><span style="color: #C50F1F;">@@@@L             
-   </span><span style="color: #7f7f7fff;">&quot;` &quot;&quot;&quot;4@@@@@L &quot;@@P&quot;  __@@@@@@               </span><span style="color: #0087FF;">j@@@@P </span><span style="color: #474747ff;">,  </span><span style="color: #C50F1F;">@@@@@A            
-            </span><span style="color: #3a3a3aff;">`%@@@,   .@@@@@@@@@@@_            </span><span style="color: #0087FF;">g@@@F  </span><span style="color: #2e2e2eff;">oF </span><span style="color: #C50F1F;">.@@@@@@g           
-               </span><span style="color: #2d2d2dff;">&quot;@@_  @@@&gt;&quot;7@@@@@@@@a__       </span><span style="color: #0087FF;">g@B&quot; </span><span style="color: #2d2d2dff;">_g@@  </span><span style="color: #C50F1F;">@@@@@@@@g          
-                 </span><span style="color: #292929ff;">%@, 9@w@r   &lt;@@@@@9&quot;       </span><span style="color: #0087FF;">+&apos; </span><span style="color: #262626ff;">__@@@@  </span><span style="color: #13A10E;">, </span><span style="color: #C50F1F;">`0@@@@@@@         
-                  </span><span style="color: #2a2a2aff;">&quot;@ &apos;@@@,  &quot;      _a_      _g@@@@@P  </span><span style="color: #13A10E;">g@@_  </span><span style="color: #C50F1F;">\@@@@@@        
-                   </span><span style="color: #1d1d1dff;">&apos;  @@@@L___@1_@@@@@@a 0@@@@@@@@&quot; </span><span style="color: #13A10E;">,@@@@@@g  </span><span style="color: #C50F1F;">&quot;@@@@@       
-                      </span><span style="color: #181818ff;">@@@@@@@@@@@@@@@@@@@_`@@@@@F  </span><span style="color: #13A10E;">g@@@@@@@@@@_  </span><span style="color: #C50F1F;">0@@@      
-                        </span><span style="color: #1a1a1aff;">^%_ &quot;@@@@@@@@@@@@@\ @@&quot;  </span><span style="color: #13A10E;">g@@@@@@@@@@@@@@L  </span><span style="color: #C50F1F;">&lt;@@     
-                           </span><span style="color: #0f0f0fff;">&apos;@_ &quot;@@@@F   &apos;@@   </span><span style="color: #13A10E;">_@@@@@@@@@@@@@@@@@@@@_ </span><span style="color: #C50F1F;">&apos;0,   
-                              </span><span style="color: #020202ff;">&lt;q  \@@@@, @F </span><span style="color: #13A10E;">.4BBBBBBBBBBBBBBBBBBBBBBB.     
-                                 </span><span style="color: #000000ff;">&quot;. &quot;@@@@P                                 
-                                      &quot;&quot;                                   
-                                                                           
-</span><br>
-  <img src="~logo/title.png" width="300">
-  </pre>
-</body>
+<p align="center">
+  <img src="~logo/logo_4html.svg" width="600" alt="CMake4Rhino Logo">
+</p>
+<p align="center">
+  <img src="~logo/title_gray.png" width="300">
+</p>
 
 
 
