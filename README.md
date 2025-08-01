@@ -2,7 +2,12 @@
   <img src="~logo/logo_4html.svg" width="600" alt="CMake4Rhino Logo">
 </p>
 <p align="center">
-  <img src="~logo/title_gray.png" width="300">
+  <!-- <img src="~logo/title_gray.png" width="300"> -->
+  <span>
+    <b style="font-family:Consolas,monospace; font-size:1.8em; color:#777;">cmake</b>
+    <b style="font-family:Consolas,monospace; font-size:1.8em; color:#666;">4</b>
+    <b style="font-family:Consolas,monospace; font-size:1.8em; color:#777;">rhino</b>
+  </span>
 </p>
 
 
