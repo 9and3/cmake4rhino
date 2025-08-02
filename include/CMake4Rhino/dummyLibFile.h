@@ -3,7 +3,7 @@
 #include "stdafx.h"
 
 
-namespace CMake4Rhino
+namespace cmake4rhino
 {
   namespace DummyFunctions
   {
@@ -18,4 +18,4 @@ namespace CMake4Rhino
     ON_Sphere DummySphere(float radius = 1.0f, 
                           const ON_3dPoint& center = ON_3dPoint::Origin);
   } // namespace DummyFunctions
-} // namespace CMake4Rhino
+} // namespace cmake4rhino

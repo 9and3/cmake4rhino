@@ -1,7 +1,7 @@
-#include "CMake4Rhino/dummyLibFile.h"
+#include "cmake4rhino/dummyLibFile.h"
 
 
-namespace CMake4Rhino
+namespace cmake4rhino
 {
   namespace DummyFunctions
   {
@@ -12,4 +12,4 @@ namespace CMake4Rhino
       return sphere;
     }
   } // namespace DummyFunctions
-} // namespace CMake4Rhino
+} // namespace cmake4rhino

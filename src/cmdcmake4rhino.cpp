@@ -5,7 +5,7 @@
 #include "cmake4rhinoPlugIn.h"
 
 // Include any cusstom libraries or your own headers here
-#include "CMake4Rhino/dummyLibFile.h"  // FIXME: disable for testing
+#include "cmake4rhino/dummyLibFile.h"
 
 // This is a personal test code to print debug messages in the console
 #include <windows.h>
@@ -93,7 +93,7 @@ CRhinoCommand::result CCommandcmake4rhino::RunCommand(const CRhinoCommandContext
 
   // FIXME: see integration with cookiecutter
   // Call a function from the dummy library to test if it works
-  ON_Sphere sphere = CMake4Rhino::DummyFunctions::DummySphere(5.0f);
+  ON_Sphere sphere = cmake4rhino::DummyFunctions::DummySphere(5.0f);
   ON_Brep* pBrep = ON_BrepSphere(sphere);
   CRhinoBrepObject* brep_object = context.m_doc.AddBrepObject(*pBrep);
   context.m_doc.Redraw();

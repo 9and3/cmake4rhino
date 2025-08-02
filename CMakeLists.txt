@@ -7,17 +7,11 @@
 
 cmake_minimum_required(VERSION 3.15)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include(cmake/Utils.cmake)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# # FIXME: find a good logic with CI integration for logo
-# add_executable(cmake-sticker ${CMAKE_SOURCE_DIR}/~logo/cmake-sticker.cc)
-# set_target_properties(cmake-sticker PROPERTIES
-#     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/cmake"
-#     OUTPUT_NAME "cmake-sticker"
-# )
-
-# TODO: print logo, this should be implemented
+# Print the logo, generator in ~logo/CMakeLists.txt
 message(STATUS  " ")
 execute_process(
     COMMAND ${CMAKE_SOURCE_DIR}/cmake/cmake-sticker.exe
@@ -61,63 +55,98 @@ message(STATUS "  -DRUN_POSTBUILD_RHINO=ON                       : Run Rhino jus
 set(RUN_POSTBUILD_RHINO OFF CACHE BOOL "")
 message(STATUS "  -DRHINO_EXE_PATH=...                           : Path to the Rhino executable (Rhino.exe) path directory")
 set(RHINO_EXE_PATH "" CACHE PATH "")
-message(STATUS "  -DENABLE_TESTS=ON                              : Enable tests (default: ON)")
-set(ENABLE_TESTS ON CACHE BOOL "")
+message(STATUS "  -DBUILD_TESTS=ON                               : Enable tests (default: ON)")
+set(BUILD_TESTS ON CACHE BOOL "")
 message(STATUS "========================================================================================================================")
 
 # ----------------------------------------------------------------------------------------------------------------------------------------
-# Source files, win resources and headers
+# Basic information, config, and project settings
 # ----------------------------------------------------------------------------------------------------------------------------------------
 project(${PLUGIN_NAME} LANGUAGES VERSION ${PLUGIN_VERSION_MAJOR}.${PLUGIN_VERSION_MINOR}.${PLUGIN_VERSION_PATCH} CXX)
 
 set(PLUGIN_CORE "${PLUGIN_NAME}_core")
 set(PLUGIN_RHP "${PLUGIN_NAME}")
-# set(PLUGIN_TESTS "${PLUGIN_NAME}_tests")  # TODO: maybe to be defined here
-
+set(CMAKE_PLUGIN_TESTS "${PLUGIN_NAME}_tests")
 
 # integration of Microsoft Foundation Classes (MFC) with CMake
 find_package(MFC REQUIRED)
 add_definitions(-D_AFXDLL)
 set(CMAKE_MFC_FLAG 1)  # ``1`` for the static MFC library, ``2`` for the shared MFC library
 
-
-
-
 # generate the .rc file for the plugin
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.rc.in
-    ${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.rc
+    ${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.rc 
     @ONLY
 )
 
-# set(BUILD_SHARED_LIBS TRUE)
-
-add_library(${PLUGIN_CORE} STATIC)  # .lib
-
-# FIXME: fix this part we need to differentiate between the plugin core and the plugin itself for src (there are entry points for plugin)
-# file(GLOB_RECURSE PLUGIN_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
-file(GLOB_RECURSE GLOB_RECURSE_CORE_LIB_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/CMake4Rhino/*.cpp")
-
-message(STATUS "Found ${GLOB_RECURSE_CORE_LIB_SOURCES} as core library sources")
-
-target_sources(${PLUGIN_CORE} PUBLIC
-    src/cmake4rhinoApp.cpp
-    src/stdafx.cpp
-    ${GLOB_RECURSE_CORE_LIB_SOURCES}
+# We divide the source files into two categories, corresponding to 2 target libraries this CMake is generating:
+# 1. rhino plugin .rhp: Sources that include the plugin headers (<yourpluginname>App.h and <yourpluginname>PlugIn.h) (for the core library)
+#    This is because they are the entry points for the plugin .rhp, thy causing problems if incldued in the static core library.
+# 2. core .lib: Sources that do not include the plugin headers (for the core library .lib). In order to unit test, we need to compile your 
+#    added files outside the .rhp structure as a static library (because .ddll in Windows do not export all symbols by default as
+#    in UNIX systems).
+file(GLOB_RECURSE ALL_CPP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+find_sources_with_includes(
+    SOURCES ${ALL_CPP_SOURCES}
+    INCLUDES ${PLUGIN_NAME}App.h ${PLUGIN_NAME}PlugIn.h
+    out_with SRC_WITH_INCLUDES
+    out_without SRC_WITHOUT_INCLUDES
 )
+print_list_on_newlines(SRC_WITH_INCLUDES HEADER "Sources with includes (for core library):")
+print_list_on_newlines(SRC_WITHOUT_INCLUDES HEADER "Sources without includes (for .rhp plugin only):")
+
+# ----------------------------------------------------------------------------------------------------------------------------------------
+# Core library
+# ----------------------------------------------------------------------------------------------------------------------------------------
+message(STATUS "=== Compiling Core static library ======================================================================================")
+# This is the core library. Since, static it can be linked to the plugin .rhp or any other library or executable (e.g. tests).
+add_library(${PLUGIN_CORE} STATIC)  # .lib for multiple linkage (.rhp, tests)
+
+# Add all the files besides the entry points for the .rhl plugin (<PluginName>App.h and <PluginName>PlugIn.h and all the files that
+# includ them as the commandds)
+target_sources(${PLUGIN_CORE} PUBLIC ${SRC_WITHOUT_INCLUDES})
 
 # Rhino 8 SDK
 find_package(Rhino8SDK REQUIRED)
 target_link_libraries(${PLUGIN_CORE} PUBLIC RHINO_CORE_INTERFACE)
 
 target_include_directories(${PLUGIN_CORE} PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/CMake4Rhino  # FIXME: shouldd change it to CORE? check that the CMake4Rhnio directory is replaced by cookiecutter
+${CMAKE_CURRENT_SOURCE_DIR}/include
+${CMAKE_CURRENT_SOURCE_DIR}/include/${PLUGIN_NAME}
 )
 target_precompile_headers(${PLUGIN_CORE} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h)
 
+# >>> Insert here all the additional dependencies and options for the core library >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# ... e.g., Boost, OpenCV, etc.
+
+# ----------------------------------------------------------------------------------------------------------------------------------------
+# .rhp library/plugin
+# ----------------------------------------------------------------------------------------------------------------------------------------
+message(STATUS "=== .rhp dynamic Rhino plugin ==========================================================================================")
+# This is the plugin .rhp, which is a dynamic library (.dll) for Rhino basically. It contains their own entry points.
+# Change the .dll to .rhp so Rhino can load it
+add_library(${PLUGIN_RHP} SHARED)  # .dll (aka .rhp later)
+
+# Add the <PluginName>App.h and <PluginName>PlugIn.h and all the commands
+target_sources(${PLUGIN_RHP} PRIVATE ${SRC_WITH_INCLUDES})
+
+message(STATUS "Found ${CMD_SOURCES} as command sources")
+
+target_link_libraries(${PLUGIN_RHP} PRIVATE ${PLUGIN_CORE})
+set_target_properties(${PLUGIN_RHP} PROPERTIES SUFFIX ".rhp")
+set_target_properties(${PLUGIN_RHP} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+)
+file(GLOB WIN32_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    ${PLUGIN_NAME}.rc
+    res/${PLUGIN_NAME}.rc
+)
+target_sources(${PLUGIN_RHP} PRIVATE
+    ${WIN32_RESOURCES}
+)
 # pre-processor data for the plugin
-target_compile_definitions(${PLUGIN_CORE} PUBLIC
+target_compile_definitions(${PLUGIN_RHP} PRIVATE
     PLUGIN_VERSION="${PLUGIN_VERSION}"
     PLUGIN_COMPANY_NAME=L\"${PLUGIN_COMPANY_NAME}\"
     PLUGIN_FILEVERSION_STR=L\"${PLUGIN_VERSION_MAJOR}, ${PLUGIN_VERSION_MINOR}, ${PLUGIN_VERSION_PATCH}, ${PLUGIN_VERSION_BUILD}\"
@@ -135,63 +164,11 @@ target_compile_definitions(${PLUGIN_CORE} PUBLIC
     PLUGIN_ID=L\"${PLUGIN_ID}\"
 )
 
-
-
-# Change the .dll to .rhp so Rhino can load it
-add_library(${PLUGIN_RHP} SHARED)  # .dll (aka .rhp later)
-function(get_cmd_sources out_var)
-    file(GLOB CMD_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/cmd*.cpp")
-    set(${out_var} ${CMD_SOURCES} PARENT_SCOPE)
-endfunction()
-
-
-# FIXME: we need a check that no other than cmdd files should be in the root src
-get_cmd_sources(CMD_SOURCES)
-target_sources(${PLUGIN_RHP} PRIVATE
-    src/cmake4rhinoPlugIn.cpp  # <-- this is the entry point of the .rhp plugin
-    ${CMD_SOURCES}
-)
-message(STATUS "Found ${CMD_SOURCES} as command sources")  # TODO: test see if keeping, there should be a check only for cmd in root
-
-
-target_link_libraries(${PLUGIN_RHP} PRIVATE ${PLUGIN_CORE})
-set_target_properties(${PLUGIN_RHP} PROPERTIES SUFFIX ".rhp")
-set_target_properties(${PLUGIN_RHP} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
-)
-file(GLOB WIN32_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-    ${PLUGIN_NAME}.rc
-    res/${PLUGIN_NAME}.rc
-)
-target_sources(${PLUGIN_RHP} PUBLIC
-    ${WIN32_RESOURCES}
-)
-
-# ----------------------------------------------------------------------------------------------------------------------------------------
-# >>> Insert additional dependencies and options >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-# ----------------------------------------------------------------------------------------------------------------------------------------
-# Insert here your additional libraries or options (e.g., Boost, OpenCV, etc.)
-
-# ----------------------------------------------------------------------------------------------------------------------------------------
-# Basic dependencies and features
-# ----------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
 # ----------------------------------------------------------------------------------------------------------------------------------------
 # Tests
 # ----------------------------------------------------------------------------------------------------------------------------------------
-if (ENABLE_TESTS)
-    message(STATUS "Tests are enabled, adding test directory...")
-    # add_subdirectory(tests)
-
-    set(CMAKE_PLUGIN_TESTS "${PLUGIN_NAME}_tests")
-    file(GLOB_RECURSE TEST_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} tests/*.cpp)
-    add_executable(${CMAKE_PLUGIN_TESTS} ${TEST_SOURCES})
-    target_link_libraries(${CMAKE_PLUGIN_TESTS} PRIVATE
-        ${PLUGIN_CORE}
-    )
+if (BUILD_TESTS)
+    add_subdirectory(tests)
 endif()
 
 # ----------------------------------------------------------------------------------------------------------------------------------------
