@@ -3,8 +3,6 @@
 # Distributed under the MIT License.
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-# TODOD: try to integrate the cmake presets .CMakePresets.json
-
 cmake_minimum_required(VERSION 3.15)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(cmake/Utils.cmake)
