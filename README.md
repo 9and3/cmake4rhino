@@ -117,6 +117,6 @@ cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DRHINO_DEBUG_PLUGIN=ON; c
 
 Flags:
 - `-DMFC_ROOT=<path_to_mfc>`: Path to the MFC library, if not set it will try to find it in the default location.
-- `-DRHINO8SDK_ROOT=<path_to_rhino8_sdk>`: Path to the Rhino 8 SDK, if not set it will try to find it in the default location.
+- `-DRHINOSDK_ROOT=<path_to_rhino8_sdk>`: Path to the Rhino 8 SDK, if not set it will try to find it in the default location.
 - `-DRHINO_EXE_PATH=<path_to_rhino_exe>`: Path to the Rhino executable, if not set it will try to find it in the default location.
 - `-DRUN_POSTBUILD_RHINO=ON`: Enable to automatically open RHino and install the plugin after building.

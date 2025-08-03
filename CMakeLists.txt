@@ -47,8 +47,8 @@ set(PLUGIN_ORIGINAL_FILENAME "${PLUGIN_NAME}.rhp")
 message(STATUS "==== Project Options ===================================================================================================")
 message(STATUS "  -DMFC_ROOT=...                                 : Path to the MFC root directory")
 set(MFC_ROOT "" CACHE PATH "")
-message(STATUS "  -DRHINO8SDK_ROOT=...                           : Path to the Rhino 8 SDK root directory")
-set(RHINO8SDK_ROOT "" CACHE PATH "")
+message(STATUS "  -DRHINOSDK_ROOT=...                           : Path to the Rhino 8 SDK root directory")
+set(RHINOSDK_ROOT "" CACHE PATH "")
 message(STATUS "  -DRUN_POSTBUILD_RHINO=ON                       : Run Rhino just after the compilation (default: OFF)")
 set(RUN_POSTBUILD_RHINO OFF CACHE BOOL "")
 message(STATUS "  -DRHINO_EXE_PATH=...                           : Path to the Rhino executable (Rhino.exe) path directory")
@@ -91,8 +91,8 @@ find_sources_with_includes(
     out_with SRC_WITH_INCLUDES
     out_without SRC_WITHOUT_INCLUDES
 )
-print_list_on_newlines(SRC_WITH_INCLUDES HEADER "Sources with includes (for core library):")
-print_list_on_newlines(SRC_WITHOUT_INCLUDES HEADER "Sources without includes (for .rhp plugin only):")
+print_list_on_newlines(SRC_WITHOUT_INCLUDES HEADER "Sources without includes (for core only):")
+print_list_on_newlines(SRC_WITH_INCLUDES HEADER "Sources with includes (for .rhp plugin library):")
 
 # ----------------------------------------------------------------------------------------------------------------------------------------
 # Core library
@@ -117,6 +117,13 @@ target_precompile_headers(${PLUGIN_CORE} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/incl
 
 # >>> Insert here all the additional dependencies and options for the core library >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # ... e.g., Boost, OpenCV, etc.
+
+
+# ----------------------------------------------------------------------------------------------------------------------------------------
+# TODO: test
+# ----------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 # ----------------------------------------------------------------------------------------------------------------------------------------
 # .rhp library/plugin
@@ -183,5 +190,3 @@ if (RUN_POSTBUILD_RHINO)
     add_dependencies(run_rhino ${PLUGIN_NAME})
 endif()
 message(STATUS "========================================================================================================================")
-
-
