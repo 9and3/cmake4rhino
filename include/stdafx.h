@@ -73,8 +73,6 @@
 #include "RhRdkHeaders.h" 
 
 // TODO: include additional Rhino-related header files here
-// #include "RhinoSdkFileUtilities.h"   // For CRhinoFileUtilities
-// #include "RhinoSdkDoc.h"             // For CRhinoDoc
 
 #if defined(RHINO_DEBUG_PLUGIN)
 // Now that all the system headers are read, we can

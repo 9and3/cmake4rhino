@@ -21,6 +21,11 @@ find_path(RHINOSDK_LIB_DIR
     PATH_SUFFIXES lib/Release
     HINTS ${_RHINO8SDK_HINTS}
 )
+find_path(RHINOSDK_ONURBS_INCLUDE_DIR
+    NAMES opennurbs.h
+    PATH_SUFFIXES openNURBS
+    HINTS ${_RHINO8SDK_HINTS}
+)
 
 if(RHINOSDK_INCLUDE_DIR AND RHINOSDK_LIB_DIR)
     set(RHINO8SDK_FOUND TRUE)
@@ -49,13 +54,16 @@ else()
         _UNICODE
         UNICODE
         RHINO_LIB_DIR=${RHINOSDK_LIB_DIR}
-        # RHINO_SDK_MFC  # TODO: uncomment if you want to use Rhino MFC classes
 
-        $<$<CONFIG:Debug>:_DEBUG;RHINO_DEBUG_PLUGIN;RHINO_LIB_DIR="${RHINOSDK_LIB_DIR}">
-        $<$<CONFIG:Release>:NDEBUG;RHINO_LIB_DIR="${RHINOSDK_LIB_DIR}">
+        $<$<CONFIG:Debug>:_DEBUG;RHINO_DEBUG_PLUGIN>
+        $<$<CONFIG:Release>:NDEBUG>
     )
     target_compile_options(RHINO_CORE_INTERFACE INTERFACE /UWIN32)  # Add this to undefine WIN64
-    target_include_directories(RHINO_CORE_INTERFACE INTERFACE ${RHINOSDK_INCLUDE_DIR})
+    target_include_directories(RHINO_CORE_INTERFACE INTERFACE
+        ${RHINOSDK_INCLUDE_DIR}
+        ${RHINOSDK_ONURBS_INCLUDE_DIR}
+    )
 
     message(STATUS "Rhino 8 SDK found: ${RHINOSDK_INCLUDE_DIR}, ${RHINOSDK_LIB_DIR}")
+    message(STATUS "Rhino 8 SDK OpenNURBS include directory: ${RHINOSDK_ONURBS_INCLUDE_DIR}")
 endif()

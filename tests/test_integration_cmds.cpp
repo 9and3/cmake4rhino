@@ -11,58 +11,17 @@ producedd ressults is as expected?
 */
 
 
-// #include <gtest/gtest.h>
-
-// #include "stdafx.h"
-
-
-// static unsigned int RhOpenHeadlessDocument(const wchar_t* pszPath)
-// {
-//   if (nullptr == pszPath || 0 == pszPath[0])
-//     return 0;
-
-//   if (!CRhinoFileUtilities::FileExists(pszPath))
-//     return 0;
-
-//   CRhinoOpenDocumentOptions options;
-//   options.SetCreateHeadless(true);
-//   options.SetMakeVisible(false);
-//   options.SetAddToMRU(false);
-//   options.SetUpdateDefaultDirectory(false);
-//   options.SetUserQueriesPermitted(false);
-//   options.SetFileReadingPlugInId(ON_nil_uuid, 0);
-
-//   return CRhinoDoc::OpenDocument(pszPath, &options);
-// }
-
-// TEST(TEST_INTEGRATION_Cmds, TestOpenHeadlessDocument)
-// {
-//   // Path to a valid Rhino model file
-//   const wchar_t* model_path = L"test_model.3dm";
-
-//   // Open the document in headless mode
-//   unsigned int doc_sn = RhOpenHeadlessDocument(model_path);
-  
-//   // Check if the document was opened successfully
-//   EXPECT_NE(doc_sn, 0) << "Failed to open headless document.";
-
-//   // Additional checks can be added here to verify the state of the document
-//   // For example, checking if certain objects exist in the document, etc.
-// }
-
-
-//--------------------------------------------------------
-
 #include <gtest/gtest.h>
 
 // Rhino SDK classes
-#include "stdafx.h"
+// #include "stdafx.h"
+#include "RhinoSdk.h"
 
 // // Rhino Render Development Kit (RDK) classes
 // #include "RhRdkHeaders.h" 
 
-// #include "RhinoSdkFileUtilities.h"   // For CRhinoFileUtilities
-// #include "RhinoSdkDoc.h"             // For CRhinoDoc
+#include "RhinoSdkDoc.h"             // For CRhinoDoc
+#include "RhinoSdkFileUtilities.h"   // For CRhinoFileUtilities
 
 
 static unsigned int RhOpenHeadlessDocument(const wchar_t* pszPath)
@@ -82,7 +41,7 @@ static unsigned int RhOpenHeadlessDocument(const wchar_t* pszPath)
 //   options.SetFileReadingPlugInId(ON_nil_uuid, 0);
 
 //   return CRhinoDoc::OpenDocument(pszPath, &options);
-    return 0;
+  return 0;
 }
 
 TEST(TEST_UNIT_RhissssnoTestSuite, TDPoissssntTest) {

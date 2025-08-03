@@ -106,7 +106,6 @@ CRhinoCommand::result CCommandcmake4rhino::RunCommand(const CRhinoCommandContext
   CRhinoCurveObject* curve_object = context.m_doc.AddCurveObject( arc_curve );
   context.m_doc.Redraw();
 
-
   // TODO: Return one of the following values:
   //   CRhinoCommand::success:  The command worked.
   //   CRhinoCommand::failure:  The command failed because of invalid input, inability

@@ -118,84 +118,68 @@ target_precompile_headers(${PLUGIN_CORE} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/incl
 # >>> Insert here all the additional dependencies and options for the core library >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # ... e.g., Boost, OpenCV, etc.
 
+# ----------------------------------------------------------------------------------------------------------------------------------------
+# .rhp library/plugin
+# ----------------------------------------------------------------------------------------------------------------------------------------
+message(STATUS "=== .rhp dynamic Rhino plugin ==========================================================================================")
+# This is the plugin .rhp, which is a dynamic library (.dll) for Rhino basically. It contains their own entry points.
+# Change the .dll to .rhp so Rhino can load it
+add_library(${PLUGIN_RHP} SHARED)  # .dll (aka .rhp later)
+
+# Add the <PluginName>App.h and <PluginName>PlugIn.h and all the commands
+target_sources(${PLUGIN_RHP} PRIVATE ${SRC_WITH_INCLUDES})
+
+message(STATUS "Found ${CMD_SOURCES} as command sources")
+
+target_link_libraries(${PLUGIN_RHP} PRIVATE ${PLUGIN_CORE})
+set_target_properties(${PLUGIN_RHP} PROPERTIES SUFFIX ".rhp")
+set_target_properties(${PLUGIN_RHP} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+)
+file(GLOB WIN32_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    ${PLUGIN_NAME}.rc
+    res/${PLUGIN_NAME}.rc
+)
+target_sources(${PLUGIN_RHP} PRIVATE
+    ${WIN32_RESOURCES}
+)
+# pre-processor data for the plugin
+target_compile_definitions(${PLUGIN_RHP} PRIVATE
+    PLUGIN_VERSION="${PLUGIN_VERSION}"
+    PLUGIN_COMPANY_NAME=L\"${PLUGIN_COMPANY_NAME}\"
+    PLUGIN_FILEVERSION_STR=L\"${PLUGIN_VERSION_MAJOR}, ${PLUGIN_VERSION_MINOR}, ${PLUGIN_VERSION_PATCH}, ${PLUGIN_VERSION_BUILD}\"
+    PLUGIN_NAME=L\"${PLUGIN_NAME}\"
+    PLUGIN_LEGAL_COPYRIGHT=L\"${PLUGIN_LEGAL_COPYRIGHT}\"
+    PLUGIN_ORIGINAL_FILENAME=L\"${PLUGIN_ORIGINAL_FILENAME}\"
+    PLUGIN_FILE_DESCRIPTION=L\"${PLUGIN_DESCRIPTION}\"
+    PLUGIN_ADDRESS=L\"${PLUGIN_ADDRESS}\"
+    PLUGIN_COUNTRY=L\"${PLUGIN_COUNTRY}\"
+    PLUGIN_PHONE=L\"${PLUGIN_PHONE}\"
+    PLUGIN_FAX=L\"${PLUGIN_FAX}\"
+    PLUGIN_EMAIL=L\"${PLUGIN_EMAIL}\"
+    PLUGIN_WEBSITE=L\"${PLUGIN_WEBSITE}\"
+    PLUGIN_UPDATE_URL=L\"${PLUGIN_UPDATE_URL}\"
+    PLUGIN_ID=L\"${PLUGIN_ID}\"
+)
 
 # ----------------------------------------------------------------------------------------------------------------------------------------
-# TODO: test
+# Tests
 # ----------------------------------------------------------------------------------------------------------------------------------------
+if (BUILD_TESTS)
+    add_subdirectory(tests)
+endif()
 
-add_executable(exec_test_rh
-    ${CMAKE_CURRENT_SOURCE_DIR}/temp/exec_test/main.cpp
-)
-target_link_libraries(exec_test_rh PRIVATE
-    ${PLUGIN_CORE}
-    # RHINO_CORE_INTERFACE
-)
-set_target_properties(exec_test_rh PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>"
-)
-
-# # ----------------------------------------------------------------------------------------------------------------------------------------
-# # .rhp library/plugin
-# # ----------------------------------------------------------------------------------------------------------------------------------------
-# message(STATUS "=== .rhp dynamic Rhino plugin ==========================================================================================")
-# # This is the plugin .rhp, which is a dynamic library (.dll) for Rhino basically. It contains their own entry points.
-# # Change the .dll to .rhp so Rhino can load it
-# add_library(${PLUGIN_RHP} SHARED)  # .dll (aka .rhp later)
-
-# # Add the <PluginName>App.h and <PluginName>PlugIn.h and all the commands
-# target_sources(${PLUGIN_RHP} PRIVATE ${SRC_WITH_INCLUDES})
-
-# message(STATUS "Found ${CMD_SOURCES} as command sources")
-
-# target_link_libraries(${PLUGIN_RHP} PRIVATE ${PLUGIN_CORE})
-# set_target_properties(${PLUGIN_RHP} PROPERTIES SUFFIX ".rhp")
-# set_target_properties(${PLUGIN_RHP} PROPERTIES
-#     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
-# )
-# file(GLOB WIN32_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-#     ${PLUGIN_NAME}.rc
-#     res/${PLUGIN_NAME}.rc
-# )
-# target_sources(${PLUGIN_RHP} PRIVATE
-#     ${WIN32_RESOURCES}
-# )
-# # pre-processor data for the plugin
-# target_compile_definitions(${PLUGIN_RHP} PRIVATE
-#     PLUGIN_VERSION="${PLUGIN_VERSION}"
-#     PLUGIN_COMPANY_NAME=L\"${PLUGIN_COMPANY_NAME}\"
-#     PLUGIN_FILEVERSION_STR=L\"${PLUGIN_VERSION_MAJOR}, ${PLUGIN_VERSION_MINOR}, ${PLUGIN_VERSION_PATCH}, ${PLUGIN_VERSION_BUILD}\"
-#     PLUGIN_NAME=L\"${PLUGIN_NAME}\"
-#     PLUGIN_LEGAL_COPYRIGHT=L\"${PLUGIN_LEGAL_COPYRIGHT}\"
-#     PLUGIN_ORIGINAL_FILENAME=L\"${PLUGIN_ORIGINAL_FILENAME}\"
-#     PLUGIN_FILE_DESCRIPTION=L\"${PLUGIN_DESCRIPTION}\"
-#     PLUGIN_ADDRESS=L\"${PLUGIN_ADDRESS}\"
-#     PLUGIN_COUNTRY=L\"${PLUGIN_COUNTRY}\"
-#     PLUGIN_PHONE=L\"${PLUGIN_PHONE}\"
-#     PLUGIN_FAX=L\"${PLUGIN_FAX}\"
-#     PLUGIN_EMAIL=L\"${PLUGIN_EMAIL}\"
-#     PLUGIN_WEBSITE=L\"${PLUGIN_WEBSITE}\"
-#     PLUGIN_UPDATE_URL=L\"${PLUGIN_UPDATE_URL}\"
-#     PLUGIN_ID=L\"${PLUGIN_ID}\"
-# )
-
-# # ----------------------------------------------------------------------------------------------------------------------------------------
-# # Tests
-# # ----------------------------------------------------------------------------------------------------------------------------------------
-# if (BUILD_TESTS)
-#     add_subdirectory(tests)
-# endif()
-
-# # ----------------------------------------------------------------------------------------------------------------------------------------
-# # Post-build steps
-# # ----------------------------------------------------------------------------------------------------------------------------------------
-# if (RUN_POSTBUILD_RHINO)
-#     message(STATUS "Running Rhino after build...")
-#     find_package(RhinoExe REQUIRED)
-#     add_custom_target(run_rhino ALL
-#         COMMAND ${RHINO_EXE} /nosplash "${CMAKE_BINARY_DIR}/$<CONFIG>/${PLUGIN_NAME}.rhp"
-#         COMMENT "Running Rhino with the built plugin in ${CMAKE_BINARY_DIR}/$<CONFIG>/${PLUGIN_NAME}.rhp"
-#         VERBATIM
-#     )
-#     add_dependencies(run_rhino ${PLUGIN_NAME})
-# endif()
-# message(STATUS "========================================================================================================================")
+# ----------------------------------------------------------------------------------------------------------------------------------------
+# Post-build steps
+# ----------------------------------------------------------------------------------------------------------------------------------------
+if (RUN_POSTBUILD_RHINO)
+    message(STATUS "Running Rhino after build...")
+    find_package(RhinoExe REQUIRED)
+    add_custom_target(run_rhino ALL
+        COMMAND ${RHINO_EXE} /nosplash "${CMAKE_BINARY_DIR}/$<CONFIG>/${PLUGIN_NAME}.rhp"
+        COMMENT "Running Rhino with the built plugin in ${CMAKE_BINARY_DIR}/$<CONFIG>/${PLUGIN_NAME}.rhp"
+        VERBATIM
+    )
+    add_dependencies(run_rhino ${PLUGIN_NAME})
+endif()
+message(STATUS "========================================================================================================================")
