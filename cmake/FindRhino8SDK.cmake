@@ -35,28 +35,27 @@ if (NOT RHINO8SDK_FOUND)
 else()
     # Set an interface library for the Rhino SDK
     add_library(RHINO_CORE_INTERFACE INTERFACE)
-    target_include_directories(RHINO_CORE_INTERFACE INTERFACE ${RHINOSDK_INCLUDE_DIR})
     target_link_libraries(RHINO_CORE_INTERFACE INTERFACE
-        ${RHINOSDK_LIB_DIR}/RhinoCore.lib
-        ${RHINOSDK_LIB_DIR}/RhinoLibrary.lib
-        ${RHINOSDK_LIB_DIR}/rdk.lib
-        ${RHINOSDK_LIB_DIR}/opennurbs.lib
+    ${RHINOSDK_LIB_DIR}/RhinoCore.lib
+    ${RHINOSDK_LIB_DIR}/RhinoLibrary.lib
+    ${RHINOSDK_LIB_DIR}/rdk.lib
+    ${RHINOSDK_LIB_DIR}/opennurbs.lib
     )
     target_compile_definitions(RHINO_CORE_INTERFACE INTERFACE
+        ON_RUNTIME_WIN
         WIN64
         _WINDOWS
         _USRDLL
         _UNICODE
         UNICODE
         RHINO_LIB_DIR=${RHINOSDK_LIB_DIR}
+        # RHINO_SDK_MFC  # TODO: uncomment if you want to use Rhino MFC classes
+
+        $<$<CONFIG:Debug>:_DEBUG;RHINO_DEBUG_PLUGIN;RHINO_LIB_DIR="${RHINOSDK_LIB_DIR}">
+        $<$<CONFIG:Release>:NDEBUG;RHINO_LIB_DIR="${RHINOSDK_LIB_DIR}">
     )
     target_compile_options(RHINO_CORE_INTERFACE INTERFACE /UWIN32)  # Add this to undefine WIN64
-    target_compile_definitions(RHINO_CORE_INTERFACE INTERFACE
-        $<$<CONFIG:Debug>:_DEBUG;RHINO_DEBUG_PLUGIN;RHINO_LIB_DIR="${RHINOSDK_LIB_DIR}">>
-    )
-    target_compile_definitions(RHINO_CORE_INTERFACE INTERFACE
-        $<$<CONFIG:Release>:NDEBUG;RHINO_LIB_DIR="${RHINOSDK_LIB_DIR}">>
-    )
+    target_include_directories(RHINO_CORE_INTERFACE INTERFACE ${RHINOSDK_INCLUDE_DIR})
 
     message(STATUS "Rhino 8 SDK found: ${RHINOSDK_INCLUDE_DIR}, ${RHINOSDK_LIB_DIR}")
 endif()

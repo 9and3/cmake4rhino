@@ -14,18 +14,14 @@ add_executable(${CMAKE_PLUGIN_TESTS} ${TEST_SOURCES})
 target_link_libraries(${CMAKE_PLUGIN_TESTS} PRIVATE
     ${PLUGIN_CORE}
     gtest_main
+    RHINO_CORE_INTERFACE
 )
 
 gtest_discover_tests(${CMAKE_PLUGIN_TESTS})
 
-execute_process(
-    COMMAND ${CMAKE_COMMAND} -E env "f:/cmake4rhino/build/tests/Debug/cmake4rhino_tests.exe"
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    # RESULT_VARIABLE TEST_RESULT
-    # OUTPUT_VARIABLE TEST_OUTPUT
-    # ERROR_VARIABLE TEST_ERROR
-)
-
-# message(STATUS "Test process output:\n${TEST_OUTPUT}")
-# message(STATUS "Test process error:\n${TEST_ERROR}")
-# message(STATUS "Test process result: ${TEST_RESULT}")
+# FIXME: to solve, for now run the exe afterwards
+# add_custom_command(TARGET ${CMAKE_PLUGIN_TESTS}
+#     POST_BUILD
+#     COMMAND $<TARGET_FILE:${CMAKE_PLUGIN_TESTS}>
+#     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+# )
