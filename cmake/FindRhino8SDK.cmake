@@ -53,7 +53,8 @@ else()
         _USRDLL
         _UNICODE
         UNICODE
-        RHINO_LIB_DIR=${RHINOSDK_LIB_DIR}
+        _CONSOLE
+        RHINO_LIB_DIR="${RHINOSDK_LIB_DIR}"
 
         $<$<CONFIG:Debug>:_DEBUG;RHINO_DEBUG_PLUGIN>
         $<$<CONFIG:Release>:NDEBUG>

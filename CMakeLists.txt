@@ -62,6 +62,7 @@ message(STATUS "================================================================
 # ----------------------------------------------------------------------------------------------------------------------------------------
 project(${PLUGIN_NAME} LANGUAGES VERSION ${PLUGIN_VERSION_MAJOR}.${PLUGIN_VERSION_MINOR}.${PLUGIN_VERSION_PATCH} CXX)
 
+# define the main libraries of the cmake
 set(PLUGIN_CORE "${PLUGIN_NAME}_core")
 set(PLUGIN_RHP "${PLUGIN_NAME}")
 set(CMAKE_PLUGIN_TESTS "${PLUGIN_NAME}_tests")
@@ -98,7 +99,8 @@ print_list_on_newlines(SRC_WITH_INCLUDES HEADER "Sources with includes (for .rhp
 # Core library
 # ----------------------------------------------------------------------------------------------------------------------------------------
 message(STATUS "=== Compiling Core static library ======================================================================================")
-# This is the core library. Since, static it can be linked to the plugin .rhp or any other library or executable (e.g. tests).
+# This is the core library. Since static, it can be linked to the plugin .rhp or any other library or executable (e.g. tests). It does
+# not contain the plugin entry points.
 add_library(${PLUGIN_CORE} STATIC)  # .lib for multiple linkage (.rhp, tests)
 
 # Add all the files besides the entry points for the .rhl plugin (<PluginName>App.h and <PluginName>PlugIn.h and all the files that
@@ -122,7 +124,8 @@ target_precompile_headers(${PLUGIN_CORE} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/incl
 # .rhp library/plugin
 # ----------------------------------------------------------------------------------------------------------------------------------------
 message(STATUS "=== .rhp dynamic Rhino plugin ==========================================================================================")
-# This is the plugin .rhp, which is a dynamic library (.dll) for Rhino basically. It contains their own entry points.
+# This is the plugin .rhp, which is a dynamic library (.dll) for Rhino basically. It contains their own entry points (<PluginName>App.h and
+# <PluginName>PlugIn.h)
 # Change the .dll to .rhp so Rhino can load it
 add_library(${PLUGIN_RHP} SHARED)  # .dll (aka .rhp later)
 
@@ -165,6 +168,12 @@ target_compile_definitions(${PLUGIN_RHP} PRIVATE
 # ----------------------------------------------------------------------------------------------------------------------------------------
 # Tests
 # ----------------------------------------------------------------------------------------------------------------------------------------
+# Note that there will be only much you can unit test in Rhino because a lot of functionalities require a running instance of Rhino.
+# For this reason, we integrate two types of tests:
+# 1. Unit tests: these are the ones that test your core library functionalities. Limit your unit test to Opennurbs and what is not 
+# testable, you can mock it up. You will most probably need to keep in the core library strictly geometry-realated (or most of it)
+# from what is in the cmds .cpp files, and not using in the core library any document-related classes (CRhinoDoc, CRhinoApp, etc.).
+# 2. Integration tests: these are testing only the commands on Rhino on a running instance of Rhino.
 if (BUILD_TESTS)
     add_subdirectory(tests)
 endif()

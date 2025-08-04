@@ -1,7 +1,7 @@
 #pragma once
 
-#include "stdafx.h"
-
+#include <rhinoSdk.h>
+#include <RhRdkHeaders.h>
 
 namespace cmake4rhino
 {
