@@ -1,5 +1,6 @@
 message(STATUS "Tests are enabled, adding test directory...")
 
+# we sue gtest as smain test framework
 include(FetchContent)
 FetchContent_Declare(
     googletest
@@ -10,18 +11,33 @@ FetchContent_MakeAvailable(googletest)
 include(GoogleTest)
 
 file(GLOB_RECURSE TEST_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
-add_executable(${CMAKE_PLUGIN_TESTS} ${TEST_SOURCES})
-target_link_libraries(${CMAKE_PLUGIN_TESTS} PRIVATE
-    ${PLUGIN_CORE}
+add_executable(${PLUGIN_TESTS} ${TEST_SOURCES})
+target_sources(${PLUGIN_TESTS} PRIVATE
+    ${PLUGIN_CORE_SRC}
+    ${CMAKE_CURRENT_SOURCE_DIR}/pch.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RhinoCore.cpp
+)
+target_link_libraries(${PLUGIN_TESTS} PRIVATE
     gtest_main
     RHINO_CORE_INTERFACE
+    3RD_PARTY_LIBS
+)
+target_include_directories(${PLUGIN_TESTS} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/include
 )
 
-gtest_discover_tests(${CMAKE_PLUGIN_TESTS})
+# Rhino 8 SDK specific compilation flags for standalone (aka Rhino.Inside.Cpp)
+target_precompile_headers(${PLUGIN_TESTS} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/pch.h")
+target_compile_definitions(${PLUGIN_TESTS} PRIVATE $<$<CONFIG:Debug>:_DEBUG>)
+# "/DELAYLOAD:opennurbs.dll" or "/DELAYLOAD:RhinoLibrary.dll" might needed in other standalone rh instances
+target_link_options(${PLUGIN_TESTS} PRIVATE "/DELAYLOAD:RhinoCore.dll")
 
-# FIXME: to solve, for now run the exe afterwards
-# add_custom_command(TARGET ${CMAKE_PLUGIN_TESTS}
+gtest_discover_tests(${PLUGIN_TESTS})
+
+# to run the test after build
+# add_custom_command(TARGET ${PLUGIN_TESTS}
 #     POST_BUILD
-#     COMMAND $<TARGET_FILE:${CMAKE_PLUGIN_TESTS}>
+#     COMMAND $<TARGET_FILE:${PLUGIN_TESTS}>
 #     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 # )

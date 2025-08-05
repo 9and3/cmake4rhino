@@ -38,8 +38,8 @@ endfunction()
 
 # Prints each item in a list variable on a new line, with an optional header.
 # Usage:
-#   print_list_on_newlines(<list_var> HEADER "Optional header")
-function(print_list_on_newlines list_var)
+#   recursive_print(<list_var> HEADER "Optional header")
+function(recursive_print list_var)
     set(options)
     set(oneValueArgs HEADER)
     set(multiValueArgs)

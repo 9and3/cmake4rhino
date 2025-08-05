@@ -1,7 +1,11 @@
 #pragma once
 
-#include <rhinoSdk.h>
-#include <RhRdkHeaders.h>
+// Use the following include guard for all files of your library that uses Rhino SDK
+#ifdef RHINO_PLUGIN_BUILD
+  #include "stdafx.h"
+#else
+  #include "pch.h"
+#endif
 
 namespace cmake4rhino
 {

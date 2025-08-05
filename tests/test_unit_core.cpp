@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "stdafx.h"
+// #include "stdafx.h"
+#include "pch.h"
 #include "cmake4rhino/dummyLibFile.h"
 
 // This is a simple test case to verify the use of Rhino SDK types and functions

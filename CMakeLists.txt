@@ -17,7 +17,7 @@ execute_process(
 )
 
 # ----------------------------------------------------------------------------------------------------------------------------------------
-# >>> INSERT your plugin information here >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# >>> INSERT your plugin information here >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # ----------------------------------------------------------------------------------------------------------------------------------------
 set(PLUGIN_VERSION_MAJOR 1)
 set(PLUGIN_VERSION_MINOR 0)
@@ -65,7 +65,7 @@ project(${PLUGIN_NAME} LANGUAGES VERSION ${PLUGIN_VERSION_MAJOR}.${PLUGIN_VERSIO
 # define the main libraries of the cmake
 set(PLUGIN_CORE "${PLUGIN_NAME}_core")
 set(PLUGIN_RHP "${PLUGIN_NAME}")
-set(CMAKE_PLUGIN_TESTS "${PLUGIN_NAME}_tests")
+set(PLUGIN_TESTS "${PLUGIN_NAME}_tests")
 
 # integration of Microsoft Foundation Classes (MFC) with CMake
 find_package(MFC REQUIRED)
@@ -79,46 +79,32 @@ configure_file(
     @ONLY
 )
 
-# We divide the source files into two categories, corresponding to 2 target libraries this CMake is generating:
-# 1. rhino plugin .rhp: Sources that include the plugin headers (<yourpluginname>App.h and <yourpluginname>PlugIn.h) (for the core library)
-#    This is because they are the entry points for the plugin .rhp, thy causing problems if incldued in the static core library.
-# 2. core .lib: Sources that do not include the plugin headers (for the core library .lib). In order to unit test, we need to compile your 
-#    added files outside the .rhp structure as a static library (because .ddll in Windows do not export all symbols by default as
-#    in UNIX systems).
-file(GLOB_RECURSE ALL_CPP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
-find_sources_with_includes(
-    SOURCES ${ALL_CPP_SOURCES}
-    INCLUDES ${PLUGIN_NAME}App.h ${PLUGIN_NAME}PlugIn.h
-    out_with SRC_WITH_INCLUDES
-    out_without SRC_WITHOUT_INCLUDES
-)
-print_list_on_newlines(SRC_WITHOUT_INCLUDES HEADER "Sources without includes (for core only):")
-print_list_on_newlines(SRC_WITH_INCLUDES HEADER "Sources with includes (for .rhp plugin library):")
-
 # ----------------------------------------------------------------------------------------------------------------------------------------
-# Core library
+# Core section
 # ----------------------------------------------------------------------------------------------------------------------------------------
 message(STATUS "=== Compiling Core static library ======================================================================================")
-# This is the core library. Since static, it can be linked to the plugin .rhp or any other library or executable (e.g. tests). It does
-# not contain the plugin entry points.
-add_library(${PLUGIN_CORE} STATIC)  # .lib for multiple linkage (.rhp, tests)
+# This is the core section. Here you can put all the code you require, it will be the only part of your source 
+# code that can be unit tested. Note that it's not a library, but only a ensemble of source files compiled
+# differently based on the .rhp or test (there are differences in the compilation flags for Rhino 8 SDK).
+file(GLOB_RECURSE PLUGIN_CORE_SRC "${CMAKE_SOURCE_DIR}/src/${PLUGIN_NAME}/*.cpp")
+recursive_print(PLUGIN_CORE_SRC HEADER "Compiling core library's sources:")
 
-# Add all the files besides the entry points for the .rhl plugin (<PluginName>App.h and <PluginName>PlugIn.h and all the files that
-# includ them as the commandds)
-target_sources(${PLUGIN_CORE} PUBLIC ${SRC_WITHOUT_INCLUDES})
-
-# Rhino 8 SDK
-find_package(Rhino8SDK REQUIRED)
-target_link_libraries(${PLUGIN_CORE} PUBLIC RHINO_CORE_INTERFACE)
-
-target_include_directories(${PLUGIN_CORE} PUBLIC
-${CMAKE_CURRENT_SOURCE_DIR}/include
-${CMAKE_CURRENT_SOURCE_DIR}/include/${PLUGIN_NAME}
-)
-target_precompile_headers(${PLUGIN_CORE} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h)
-
-# >>> Insert here all the additional dependencies and options for the core library >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-# ... e.g., Boost, OpenCV, etc.
+# ----------------------------------------------------------------------------------------------------------------------------------------
+# >>> INSERT your 3rd party libraries (e.g. Boost, OpenCV, etc.) here >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# ----------------------------------------------------------------------------------------------------------------------------------------
+# Uncomment the following lines to add 3rd party libraries, better if compiled as static libraries for Windows.
+# Doing so, you are sure that all the symbols are exported and available for linking in Windows.
+# erase the dummy.cpp file in cmake/dummy.cpp and reaplace it with "", next, add your 3rd party libraries then.
+add_library(3RD_PARTY_LIBS STATIC ${CMAKE_SOURCE_DIR}/cmake/dummy.cpp)
+# # Link both static and shared libraries
+# target_link_libraries(3RD_PARTY_LIBS PUBLIC
+#     SomeStaticLib
+#     SomeSharedDLL
+# )
+# # Add include directories, definitions, etc.
+# target_include_directories(3RD_PARTY_LIBS PUBLIC
+#     ${SOME_INCLUDE_DIR}
+# )
 
 # ----------------------------------------------------------------------------------------------------------------------------------------
 # .rhp library/plugin
@@ -126,15 +112,29 @@ target_precompile_headers(${PLUGIN_CORE} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/incl
 message(STATUS "=== .rhp dynamic Rhino plugin ==========================================================================================")
 # This is the plugin .rhp, which is a dynamic library (.dll) for Rhino basically. It contains their own entry points (<PluginName>App.h and
 # <PluginName>PlugIn.h)
-# Change the .dll to .rhp so Rhino can load it
 add_library(${PLUGIN_RHP} SHARED)  # .dll (aka .rhp later)
 
-# Add the <PluginName>App.h and <PluginName>PlugIn.h and all the commands
-target_sources(${PLUGIN_RHP} PRIVATE ${SRC_WITH_INCLUDES})
+target_compile_definitions(${PLUGIN_RHP} PRIVATE RHINO_PLUGIN_BUILD)
 
-message(STATUS "Found ${CMD_SOURCES} as command sources")
 
-target_link_libraries(${PLUGIN_RHP} PRIVATE ${PLUGIN_CORE})
+file(GLOB PLUGIN_RHP_SRC RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
+recursive_print(PLUGIN_RHP_SRC HEADER "Compiling plugin sources for the .rhp:")
+target_sources(${PLUGIN_RHP} PRIVATE
+    ${PLUGIN_RHP_SRC}
+    ${PLUGIN_CORE_SRC}
+)
+target_include_directories(${PLUGIN_RHP} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+# Rhino 8 SDK specific compilation flags for .rhp
+find_package(Rhino8SDK REQUIRED)
+target_link_libraries(${PLUGIN_RHP} PRIVATE 
+    RHINO_CORE_INTERFACE
+    3RD_PARTY_LIBS
+)
+target_precompile_headers(${PLUGIN_RHP} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h)
+target_compile_definitions(${PLUGIN_RHP} PRIVATE $<$<CONFIG:Debug>:_DEBUG;RHINO_DEBUG_PLUGIN>)
 set_target_properties(${PLUGIN_RHP} PROPERTIES SUFFIX ".rhp")
 set_target_properties(${PLUGIN_RHP} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
@@ -146,7 +146,6 @@ file(GLOB WIN32_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 target_sources(${PLUGIN_RHP} PRIVATE
     ${WIN32_RESOURCES}
 )
-# pre-processor data for the plugin
 target_compile_definitions(${PLUGIN_RHP} PRIVATE
     PLUGIN_VERSION="${PLUGIN_VERSION}"
     PLUGIN_COMPANY_NAME=L\"${PLUGIN_COMPANY_NAME}\"
@@ -168,12 +167,10 @@ target_compile_definitions(${PLUGIN_RHP} PRIVATE
 # ----------------------------------------------------------------------------------------------------------------------------------------
 # Tests
 # ----------------------------------------------------------------------------------------------------------------------------------------
-# Note that there will be only much you can unit test in Rhino because a lot of functionalities require a running instance of Rhino.
-# For this reason, we integrate two types of tests:
-# 1. Unit tests: these are the ones that test your core library functionalities. Limit your unit test to Opennurbs and what is not 
-# testable, you can mock it up. You will most probably need to keep in the core library strictly geometry-realated (or most of it)
-# from what is in the cmds .cpp files, and not using in the core library any document-related classes (CRhinoDoc, CRhinoApp, etc.).
-# 2. Integration tests: these are testing only the commands on Rhino on a running instance of Rhino.
+# We integrate two types of tests:
+# 1. Unit tests: these are the ones that test your core library functionalities. Note that the commands are not unit-testable.
+# 2. Integration tests: these are testing only the commands on Rhino on a running headless instance of Rhino (via Rhino.Inside).
+# 3. .. free to add more tests as you like, e.g. performance tests, etc.
 if (BUILD_TESTS)
     add_subdirectory(tests)
 endif()

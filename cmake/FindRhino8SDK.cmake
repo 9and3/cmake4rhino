@@ -56,7 +56,7 @@ else()
         _CONSOLE
         RHINO_LIB_DIR="${RHINOSDK_LIB_DIR}"
 
-        $<$<CONFIG:Debug>:_DEBUG;RHINO_DEBUG_PLUGIN>
+        # $<$<CONFIG:Debug>:_DEBUG;RHINO_DEBUG_PLUGIN>
         $<$<CONFIG:Release>:NDEBUG>
     )
     target_compile_options(RHINO_CORE_INTERFACE INTERFACE /UWIN32)  # Add this to undefine WIN64
@@ -64,6 +64,11 @@ else()
         ${RHINOSDK_INCLUDE_DIR}
         ${RHINOSDK_ONURBS_INCLUDE_DIR}
     )
+    # target_link_options(RHINO_CORE_INTERFACE INTERFACE 
+    #     "/DELAYLOAD:opennurbs.dll"
+    #     "/DELAYLOAD:RhinoCore.dll"
+    #     "/DELAYLOAD:RhinoLibrary.dll"
+    # )
 
     message(STATUS "Rhino 8 SDK found: ${RHINOSDK_INCLUDE_DIR}, ${RHINOSDK_LIB_DIR}")
     message(STATUS "Rhino 8 SDK OpenNURBS include directory: ${RHINOSDK_ONURBS_INCLUDE_DIR}")
