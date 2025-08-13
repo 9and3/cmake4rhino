@@ -9,6 +9,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 include(GoogleTest)
+set(GTEST_COLOR yes)
 
 file(GLOB_RECURSE TEST_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 add_executable(${PLUGIN_TESTS} ${TEST_SOURCES})

@@ -7,11 +7,7 @@
 #include "pch.h"
 #include "RhinoCore.h"
 
-/**
- * @brief This is the  fixture to open and clean automatically a Rhino document.
- * You can add here all functionalities linked to the document.
- * 
- */
+
 class RhinoDocTest : public ::testing::Test {
 protected:
     int doc_runtime_serial_number = 0;
@@ -45,12 +41,6 @@ private:
 
 };
 
-/**
- * @brief This is an example integration test for the Rhino document.
- * Use macros to make it run and read/modify and evaluate the added geometries
- * to make your assertions.
- *
- */
 TEST_F(RhinoDocTest, MyIntegrationTest) {
     // macro
     const wchar_t* cmdName = 
