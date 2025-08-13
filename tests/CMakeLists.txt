@@ -27,6 +27,9 @@ target_include_directories(${PLUGIN_TESTS} PRIVATE
     ${CMAKE_SOURCE_DIR}/include
 )
 
+# be sure that the Rhino exe (with RhinoCore.h) is present
+find_package(RhinoExe REQUIRED)
+
 # Rhino 8 SDK specific compilation flags for standalone (aka Rhino.Inside.Cpp)
 target_precompile_headers(${PLUGIN_TESTS} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/pch.h")
 target_compile_definitions(${PLUGIN_TESTS} PRIVATE $<$<CONFIG:Debug>:_DEBUG>)
