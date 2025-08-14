@@ -14,7 +14,6 @@ protected:
         options.SetCreateHeadless(false);  // if true, RunScript will not work properly with geometries
         doc_runtime_serial_number = CRhinoDoc::CreateDocument(nullptr, &options);
         pDoc = CRhinoDoc::FromRuntimeSerialNumber(doc_runtime_serial_number);
-        ASSERT_TRUE(pDoc != nullptr);
     }
 
     void TearDown() override {

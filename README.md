@@ -115,7 +115,7 @@ cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DRHINO_DEBUG_PLUGIN=ON; c
 cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DRHINO_DEBUG_PLUGIN=ON; cmake --build build --config Release
 ```
 
-Flags:
+Important flags:
 - `-DMFC_ROOT=<path_to_mfc>`: Path to the MFC library, if not set it will try to find it in the default location.
 - `-DRHINOSDK_ROOT=<path_to_rhino8_sdk>`: Path to the Rhino 8 SDK, if not set it will try to find it in the default location.
 - `-DRHINO_EXE_PATH=<path_to_rhino_exe>`: Path to the Rhino executable, if not set it will try to find it in the default location.
@@ -123,15 +123,49 @@ Flags:
 
 #### Testing
 
-Coming..
+> [!IMPORTANT]  
+> Be sure to install by drag-and-drop the `build/Release/YourPlugin.rhp` file into the Rhino window before to run the tests. After this, the tests, if enabled, will work every time.
+
+Googletest framework is used, tests can be enabled with `-DBUILD_TESTS=ON` (default: off).
+You can write either unit tests or test your commands:
+```cpp
+TEST_F(RhinoDocTest, MyIntegrationTest) {
+    // macro
+    const wchar_t* cmdName = 
+        L"!_cmake4rhino "
+        L"\"test\" "
+        L"_Enter";
+
+    // run the command
+    bool resCmd = pDoc->RunScript(cmdName);
+
+    // get the objects added to the document
+    ON_SimpleArray<ON_UUID> objectIDs = GetObjectIDs();
+
+    ASSERT_TRUE(resCmd) << "Command execution failed";
+    ASSERT_EQ(objectIDs.Count(), 2) << "No sphere and curve found in the document";
+}
+```
+You can run your command as a macro and read and evaluate the generated geometries as in the example.
+
+> [!WARNING]  
+> Note that it's not possible to test UI but only command interface and geometries.
 
 ### How it works
 
-The cmake project compilation is splitted in 3 parts:
-- the `PLUGIN_CORE`
-- the `PLUGIN_RHP`
-- and, the `PLUGIN_TEST`
+<div style="display: flex; align-items: flex-start;">
+  <img src="assets/diagramrhptest.png" width="400" alt="diagramw" style="margin-right: 24px;">
+  <div>
+    The cmake project compilation is split in 3 parts:<br>
+    <ul>
+      <li><code>PLUGIN_CORE</code>: your external library</li>
+      <li><code>PLUGIN_RHP</code>: the Rhino plugin itself</li>
+      <li><code>PLUGIN_TEST</code>: where your tests live</li>
+    </ul>
+    Basically, Rhino is linked two times with different flags based on the `.rhp` compilation or the test part which is a console exec. For this last one we also add the `Rhino.Inside.Cpp`([here](https://github.com/mcneel/rhino-developer-samples/blob/8/rhino.inside/cpp/Main.cpp#L7)) headers which allows to run headless instances of Rhino.
+  </div>
+</div>
 
-<p align="center">
-  <img src="assets/diagramrhptest.png" width="400" alt="diagramw" style="margin-bottom:0;">
-</p>
+### Contributions
+
+Contributions to the project are welcome! If you have suggestions, improvements, or bug fixes, please submit a pull request or open an issue.
