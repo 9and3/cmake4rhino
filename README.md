@@ -80,9 +80,9 @@ The template is distributed as a [cookiecutter](https://github.com/cookiecutter/
 
 <br>
 
-### Quickstart
+## Quickstart
 
-#### Download the template
+### Download the template
 
 You can download the template with the following command in a terminal:
 
@@ -92,15 +92,15 @@ cookiecutter gh:9and3/cmake4rhino --checkout cookietemplate
 ```
 When asked, change the project name with your plug-in name.
 
-#### Project information
+### Project information
 The remaining information to change can be found in the `CMakeLists.txt` file to be filled with your project information, such as the name, version, author, etc:
 
 https://github.com/9and3/cmake4rhino/blob/5d0722a11a8476ff51b25dceda3b8a25a282155d/CMakeLists.txt#L20-L31
 
-#### Logo
+### Logo
 The logo should be replaced in the `res/` folder with your own (remember 256-pixel square `.ico` file).
 
-#### Compile
+### Compile
 
 Check-in your folder:
 ```bash
@@ -121,7 +121,7 @@ Important flags:
 - `-DRHINO_EXE_PATH=<path_to_rhino_exe>`: Path to the Rhino executable, if not set it will try to find it in the default location.
 - `-DRUN_POSTBUILD_RHINO=ON`: Enable to automatically open RHino and install the plugin after building.
 
-#### Testing
+### Testing
 
 > [!IMPORTANT]  
 > Be sure to install by drag-and-drop the `build/Release/YourPlugin.rhp` file into the Rhino window before to run the tests. After this, the tests, if enabled, will work every time.
