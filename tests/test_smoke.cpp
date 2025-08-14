@@ -10,7 +10,7 @@
 
 #include "fixture_rhinodoc.hh"
 
-TEST_F(RhinoDocTest, PluginIsInstalled) {
+TEST_F(RhinoDocTest, T01_PluginIsInstalled) {
 #ifdef PLUGIN_ID
     const wchar_t* pluginID_c = PLUGIN_ID;
     std::wstring pluginID_str = pluginID_c;
