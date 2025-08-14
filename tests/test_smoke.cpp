@@ -3,37 +3,38 @@
 #include <windows.h>
 #include <string>
 #include <iostream>
+#include <algorithm>
 
 #include "pch.h"
 #include "RhinoCore.h"
 
-TEST(TEST_SMOKE_PluginManagement, PluginInstalled) {
-    // CRhinoCore rhino_core();
+#include "fixture_rhinodoc.hh"
 
-    CRhinoCreateDocumentOptions options;
-    options.SetCreateHeadless(true);  // if true, RunScript will not work properly with geometries
-    int doc_runtime_serial_number = CRhinoDoc::CreateDocument(nullptr, &options);
-    CRhinoDoc* pDoc = CRhinoDoc::FromRuntimeSerialNumber(doc_runtime_serial_number);
+TEST_F(RhinoDocTest, PluginIsInstalled) {
+#ifdef PLUGIN_ID
+    const wchar_t* pluginID_c = PLUGIN_ID;
+    std::wstring pluginID_str = pluginID_c;
 
-    // create UUID to import from the guid string
-    std::string guid = "5AC5581C-0559-492F-9E46-21574EE7F52B";
-    ON_UUID pluginGUID = ON_UuidFromString(guid.c_str());
+    ON_UUID pluginGUID = ON_UuidFromString(pluginID_str.c_str());
     CRhinoPlugInRecord* plugInRecord = nullptr;
     plugInRecord = CRhinoFileImportPlugIn::GetLoadedPlugIn(pluginGUID);
-
-
-    ON_UUID PlugInID_read;
-    bool isSuc = plugInRecord->PlugInInfo().GetPlugInId(PlugInID_read);
+    
+    ON_UUID pluginIDOnSystem;
+    bool isSuc = plugInRecord->PlugInInfo().GetPlugInId(pluginIDOnSystem);
     char uuid_str[64] = {0};
-    ON_UuidToString(PlugInID_read, uuid_str);
-    std::string PlugInID_read_str = uuid_str;
+    ON_UuidToString(pluginIDOnSystem, uuid_str);
+    std::string pluginIDOnSystem_str = uuid_str;
+    
+    // Convert pluginIDOnSystem_str (std::string) to std::wstring
+    std::wstring pluginIDOnSystem_wstr(pluginIDOnSystem_str.begin(), pluginIDOnSystem_str.end());
 
-    std::cout << "PlugInID_read: " << PlugInID_read_str << std::endl;
-    // std::wcout << "read info" << plugInRecord->PlugInInfo().PlugInPath() << std::endl;
+    // Convert both to lower case
+    std::transform(pluginID_str.begin(), pluginID_str.end(), pluginID_str.begin(), ::towlower);
+    std::transform(pluginIDOnSystem_wstr.begin(), pluginIDOnSystem_wstr.end(), pluginIDOnSystem_wstr.begin(), ::towlower);
 
-    // ASSERT_NE(plugInRecord, nullptr);
-    // ASSERT_TRUE(false);
-
-    // make an assertion that needs to fail
-    ASSERT_TRUE(false);
+    // Compare
+    ASSERT_EQ(pluginID_str, pluginIDOnSystem_wstr) << "The plugin is installed";
+#else
+    std::cout << "PLUGIN_ID is not defined. Skipping plugin installation test." << std::endl;
+#endif
 }

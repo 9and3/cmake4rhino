@@ -120,3 +120,18 @@ Flags:
 - `-DRHINOSDK_ROOT=<path_to_rhino8_sdk>`: Path to the Rhino 8 SDK, if not set it will try to find it in the default location.
 - `-DRHINO_EXE_PATH=<path_to_rhino_exe>`: Path to the Rhino executable, if not set it will try to find it in the default location.
 - `-DRUN_POSTBUILD_RHINO=ON`: Enable to automatically open RHino and install the plugin after building.
+
+#### Testing
+
+Coming..
+
+### How it works
+
+The cmake project compilation is splitted in 3 parts:
+- the `PLUGIN_CORE`
+- the `PLUGIN_RHP`
+- and, the `PLUGIN_TEST`
+
+<p align="center">
+  <img src="assets/diagramrhptest.png" width="400" alt="diagramw" style="margin-bottom:0;">
+</p>

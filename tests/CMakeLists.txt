@@ -28,6 +28,9 @@ target_include_directories(${PLUGIN_TESTS} PRIVATE
     ${CMAKE_SOURCE_DIR}/include
 )
 
+# add also all the preprocessor variables to use plugin info in tests (e.g. GUID)
+target_compile_definitions(${PLUGIN_TESTS} PRIVATE ${PLUGININFO_PREPROCESSOR_VAR})
+
 # be sure that the Rhino exe (with RhinoCore.h) is present
 find_package(RhinoExe REQUIRED)
 

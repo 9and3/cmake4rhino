@@ -66,22 +66,12 @@ public:
 // Do NOT create any other instance of a CCommandcmake4rhino class.
 static class CCommandcmake4rhino thecmake4rhinoCommand;
 
+// TODO: Add command code here.
 CRhinoCommand::result CCommandcmake4rhino::RunCommand(const CRhinoCommandContext& context)
 {
-  // CCommandcmake4rhino::RunCommand() is called when the user
-  // runs the "cmake4rhino".
-
-  // TODO: Add command code here.
-
-  // Rhino command that display a dialog box interface should also support
-  // a command-line, or script-able interface.
-  ON_wString str;
-  str.Format(L"The \"%s\" has been fired.\n", EnglishCommandName());
-  const wchar_t* pszStr = static_cast<const wchar_t*>(str);
-  if (context.IsInteractive())
-    RhinoMessageBox(pszStr, cmake4rhinoPlugIn().PlugInName(), MB_OK);
-  else
-    RhinoApp().Print(pszStr);
+  CRhinoDoc* doc = context.Document();
+  if (nullptr == doc)
+    return CRhinoCommand::failure;
 
   // print on console a simple debug message
 #ifdef RHINO_DEBUG_PLUGIN
@@ -98,13 +88,27 @@ CRhinoCommand::result CCommandcmake4rhino::RunCommand(const CRhinoCommandContext
   CRhinoBrepObject* brep_object = context.m_doc.AddBrepObject(*pBrep);
   context.m_doc.Redraw();
 
+  // Prompt for a block to insert
+  CRhinoGetString gs;
+  gs.SetCommandPrompt(L"Testing input");
+  gs.GetString();
+  if (gs.CommandResult() != CRhinoCommand::success)
+    return gs.CommandResult();
+  ON_wString block_name = gs.String();
+  block_name.TrimLeftAndRight();
+  if (block_name.IsEmpty())
+    return CRhinoCommand::cancel;
+
   // add a simple curve circle to test geometries
   ON_3dPoint center(0, 0, 0);
   double radius = 10.0;
   ON_Circle circle( center, radius );
   ON_ArcCurve arc_curve( circle );
-  CRhinoCurveObject* curve_object = context.m_doc.AddCurveObject( arc_curve );
+  CRhinoCurveObject* curve_object = context.m_doc.AddCurveObject(arc_curve);
   context.m_doc.Redraw();
+
+  // ask the user to click the point
+  
 
   // TODO: Return one of the following values:
   //   CRhinoCommand::success:  The command worked.

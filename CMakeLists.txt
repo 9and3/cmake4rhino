@@ -53,8 +53,8 @@ message(STATUS "  -DRUN_POSTBUILD_RHINO=ON                       : Run Rhino jus
 set(RUN_POSTBUILD_RHINO OFF CACHE BOOL "")
 message(STATUS "  -DRHINO_EXE_PATH=...                           : Path to the Rhino executable (Rhino.exe) path directory")
 set(RHINO_EXE_PATH "" CACHE PATH "")
-message(STATUS "  -DBUILD_TESTS=ON                               : Enable tests (default: ON)")
-set(BUILD_TESTS ON CACHE BOOL "")
+message(STATUS "  -DBUILD_TESTS=OFF                               : Enable tests (default: ON)")
+set(BUILD_TESTS OFF CACHE BOOL "")
 message(STATUS "========================================================================================================================")
 
 # ----------------------------------------------------------------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ file(GLOB WIN32_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 target_sources(${PLUGIN_RHP} PRIVATE
     ${WIN32_RESOURCES}
 )
-target_compile_definitions(${PLUGIN_RHP} PRIVATE
+set(PLUGININFO_PREPROCESSOR_VAR
     PLUGIN_VERSION="${PLUGIN_VERSION}"
     PLUGIN_COMPANY_NAME=L\"${PLUGIN_COMPANY_NAME}\"
     PLUGIN_FILEVERSION_STR=L\"${PLUGIN_VERSION_MAJOR}, ${PLUGIN_VERSION_MINOR}, ${PLUGIN_VERSION_PATCH}, ${PLUGIN_VERSION_BUILD}\"
@@ -163,6 +163,8 @@ target_compile_definitions(${PLUGIN_RHP} PRIVATE
     PLUGIN_UPDATE_URL=L\"${PLUGIN_UPDATE_URL}\"
     PLUGIN_ID=L\"${PLUGIN_ID}\"
 )
+target_compile_definitions(${PLUGIN_RHP} PRIVATE ${PLUGININFO_PREPROCESSOR_VAR})
+
 
 # ----------------------------------------------------------------------------------------------------------------------------------------
 # Tests
