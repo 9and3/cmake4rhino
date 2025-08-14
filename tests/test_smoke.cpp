@@ -25,14 +25,11 @@ TEST_F(RhinoDocTest, PluginIsInstalled) {
     ON_UuidToString(pluginIDOnSystem, uuid_str);
     std::string pluginIDOnSystem_str = uuid_str;
     
-    // Convert pluginIDOnSystem_str (std::string) to std::wstring
     std::wstring pluginIDOnSystem_wstr(pluginIDOnSystem_str.begin(), pluginIDOnSystem_str.end());
-
-    // Convert both to lower case
     std::transform(pluginID_str.begin(), pluginID_str.end(), pluginID_str.begin(), ::towlower);
     std::transform(pluginIDOnSystem_wstr.begin(), pluginIDOnSystem_wstr.end(), pluginIDOnSystem_wstr.begin(), ::towlower);
 
-    // Compare
+    // Compare Rh plugin and the cmake plugin IDs to verify if installed
     ASSERT_EQ(pluginID_str, pluginIDOnSystem_wstr) << "The plugin is installed";
 #else
     std::cout << "PLUGIN_ID is not defined. Skipping plugin installation test." << std::endl;
