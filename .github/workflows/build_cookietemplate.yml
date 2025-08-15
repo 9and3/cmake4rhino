@@ -3,11 +3,16 @@ name: build coockiecutter
 on:
   push:
     branches: [ Main ]
+  pull_request:
+    branches: [ Main ]
   workflow_dispatch:
 
 permissions:
   contents: write
   pull-requests: write
+
+env:
+  VCPKG_FILE: c:/vcpkg/scripts/buildsystems/vcpkg.cmake
 
 jobs:
   build-template:
@@ -54,7 +59,91 @@ jobs:
           shopt -s extglob
           mv !(cookiecutter.json|{{cookiecutter.your_plugin_name}}) "{{cookiecutter.your_plugin_name}}"/
 
-      - name: Commit and push to cookietemplate branch
+      - name: Store the cookie template as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cookie-template
+          path: template/
+
+      - name: Commit and push to cookietemplate_test branch
+        # if: github.event_name == 'push' && github.ref == 'refs/heads/Main'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -B cookietemplate_test
+          git rm -rf .
+          cp -r template/* .
+          git add .
+          git commit -m "Build Cookiecutter template from Main"
+          git push --force origin cookietemplate_test
+
+  test-template:
+    needs: build-template
+    runs-on: windows-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up PAT
+        run: git remote set-url origin https://x-access-token:${{ secrets.ADMIN_CICD_TOKEN }}@github.com/9and3/cmake4rhino.git
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install requirements
+        run: pip install cookiecutter
+
+      - name: Install test template from cookietemplate_test branch
+        run: |
+          cookiecutter gh:9and3/cmake4rhino --checkout cookietemplate_test --no-input --output-dir TesterPlugIn
+
+      - name: Checkout TesterPlugIn
+        uses: actions/checkout@v4
+        with:
+          path: TesterPlugIn
+
+      - name: Download and extract Rhino SDK
+        id: rhino_sdk
+        uses: ./.github/actions/rhino-sdk
+
+      - name: Configure CMake project
+        run: |
+          $sdkRoot = "${{ steps.rhino_sdk.outputs.sdkRoot }}"
+          cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DRHINO_DEBUG_PLUGIN=OFF -DRHINOSDK_ROOT="$sdkRoot"
+        shell: pwsh
+ 
+      - name: Build CMake project
+        run: cmake --build build --config Release
+
+
+  deploy-template:
+    needs: test-template
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up PAT
+        run: git remote set-url origin https://x-access-token:${{ secrets.ADMIN_CICD_TOKEN }}@github.com/9and3/cmake4rhino.git
+
+      - name: Download cookie template
+        uses: actions/download-artifact@v4
+        with:
+          name: cookie-template
+          path: template/
+
+      - name: Commit and push to cookietemplate deployement branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/Main'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -62,6 +151,7 @@ jobs:
           git rm -rf .
           cp -r template/* .
           git add .
-          git commit -m "Build Cookiecutter template from main"
+          git commit -m "Build Cookiecutter template from Main"
           git push --force origin cookietemplate
+
 

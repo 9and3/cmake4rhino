@@ -5,12 +5,20 @@
 
 cmake_minimum_required(VERSION 3.15)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include(cmake/Utils.cmake)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# --------------------------------------------------------------------------------------------------------------------------
-# >>> INSERT your plugin information here >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-# --------------------------------------------------------------------------------------------------------------------------
+# Print the logo, generator in ~logo/CMakeLists.txt
+message(STATUS  " ")
+execute_process(
+    COMMAND ${CMAKE_SOURCE_DIR}/cmake/cmake-sticker.exe
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
+# ----------------------------------------------------------------------------------------------------------------------------------------
+# >>> INSERT your plugin information here >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# ----------------------------------------------------------------------------------------------------------------------------------------
 set(PLUGIN_VERSION_MAJOR 1)
 set(PLUGIN_VERSION_MINOR 0)
 set(PLUGIN_VERSION_PATCH 0)
@@ -33,55 +41,112 @@ set(PLUGIN_ID "5AC5581C-0559-492F-9E46-21574EE7F52B")
 set(ICON_PATH "${CMAKE_SOURCE_DIR}/res/${PLUGIN_NAME}.ico")
 set(PLUGIN_ORIGINAL_FILENAME "${PLUGIN_NAME}.rhp")
 
-# --------------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------------------------
 # Options
-# --------------------------------------------------------------------------------------------------------------------------
-message(STATUS "==== Project Options =====================================================================================")
+# ----------------------------------------------------------------------------------------------------------------------------------------
+message(STATUS "==== Project Options ===================================================================================================")
 message(STATUS "  -DMFC_ROOT=...                                 : Path to the MFC root directory")
 set(MFC_ROOT "" CACHE PATH "")
-message(STATUS "  -DRHINO8SDK_ROOT=...                           : Path to the Rhino 8 SDK root directory")
-set(RHINO8SDK_ROOT "" CACHE PATH "")
-message(STATUS "  -DRUN_POSTBUILD_RHINO=ON                       : Run Rhino just after the compilation (default: OFF)")
+message(STATUS "  -DRHINOSDK_ROOT=...                            : Path to the Rhino 8 SDK root directory")
+set(RHINOSDK_ROOT "" CACHE PATH "")
+message(STATUS "  -DRUN_POSTBUILD_RHINO=OFF                      : Run Rhino just after the compilation (default: OFF)")
 set(RUN_POSTBUILD_RHINO OFF CACHE BOOL "")
 message(STATUS "  -DRHINO_EXE_PATH=...                           : Path to the Rhino executable (Rhino.exe) path directory")
 set(RHINO_EXE_PATH "" CACHE PATH "")
-message(STATUS "==========================================================================================================")
+message(STATUS "  -DBUILD_TESTS=OFF                              : Enable tests (default: ON)")
+set(BUILD_TESTS OFF CACHE BOOL "")
+message(STATUS "========================================================================================================================")
 
-# --------------------------------------------------------------------------------------------------------------------------
-# Source files, win resources and headers
-# --------------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------------------------
+# Basic information, config, and project settings
+# ----------------------------------------------------------------------------------------------------------------------------------------
 project(${PLUGIN_NAME} LANGUAGES VERSION ${PLUGIN_VERSION_MAJOR}.${PLUGIN_VERSION_MINOR}.${PLUGIN_VERSION_PATCH} CXX)
+
+# define the main libraries of the cmake
+set(PLUGIN_CORE "${PLUGIN_NAME}_core")
+set(PLUGIN_RHP "${PLUGIN_NAME}")
+set(PLUGIN_TESTS "${PLUGIN_NAME}_tests")
+
+# integration of Microsoft Foundation Classes (MFC) with CMake
+find_package(MFC REQUIRED)
+add_definitions(-D_AFXDLL)
+set(CMAKE_MFC_FLAG 1)  # ``1`` for the static MFC library, ``2`` for the shared MFC library
 
 # generate the .rc file for the plugin
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.rc.in
-    ${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.rc
+    ${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.rc 
     @ONLY
 )
 
-# src/headers and .rhp (aka .dll)
-add_library(${PLUGIN_NAME} SHARED)
+# ----------------------------------------------------------------------------------------------------------------------------------------
+# Core section
+# ----------------------------------------------------------------------------------------------------------------------------------------
+message(STATUS "=== Compiling Core static library ======================================================================================")
+# This is the core section. Here you can put all the code you require, it will be the only part of your source 
+# code that can be unit tested. Note that it's not a library, but only a ensemble of source files compiled
+# differently based on the .rhp or test (there are differences in the compilation flags for Rhino 8 SDK).
+file(GLOB_RECURSE PLUGIN_CORE_SRC "${CMAKE_SOURCE_DIR}/src/core/*.cpp")
+recursive_print(PLUGIN_CORE_SRC HEADER "Compiling core library's sources:")
 
-file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
+# ----------------------------------------------------------------------------------------------------------------------------------------
+# >>> INSERT your 3rd party libraries (e.g. Boost, OpenCV, etc.) here >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# ----------------------------------------------------------------------------------------------------------------------------------------
+# Uncomment the following lines to add 3rd party libraries, better if compiled as static libraries for Windows.
+# Doing so, you are sure that all the symbols are exported and available for linking in Windows.
+# erase the dummy.cpp file in cmake/dummy.cpp and reaplace it with "", next, add your 3rd party libraries then.
+add_library(3RD_PARTY_LIBS STATIC ${CMAKE_SOURCE_DIR}/cmake/dummy.cpp)
+# # Link both static and shared libraries
+# target_link_libraries(3RD_PARTY_LIBS PUBLIC
+#     SomeStaticLib
+#     SomeSharedDLL
+# )
+# # Add include directories, definitions, etc.
+# target_include_directories(3RD_PARTY_LIBS PUBLIC
+#     ${SOME_INCLUDE_DIR}
+# )
+
+# ----------------------------------------------------------------------------------------------------------------------------------------
+# .rhp library/plugin
+# ----------------------------------------------------------------------------------------------------------------------------------------
+message(STATUS "=== .rhp dynamic Rhino plugin ==========================================================================================")
+# This is the plugin .rhp, which is a dynamic library (.dll) for Rhino basically. It contains their own entry points (<PluginName>App.h and
+# <PluginName>PlugIn.h)
+add_library(${PLUGIN_RHP} SHARED)  # .dll (aka .rhp later)
+
+target_compile_definitions(${PLUGIN_RHP} PRIVATE RHINO_PLUGIN_BUILD)
+
+
+file(GLOB PLUGIN_RHP_SRC RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
+recursive_print(PLUGIN_RHP_SRC HEADER "Compiling plugin sources for the .rhp:")
+target_sources(${PLUGIN_RHP} PRIVATE
+    ${PLUGIN_RHP_SRC}
+    ${PLUGIN_CORE_SRC}
+)
+target_include_directories(${PLUGIN_RHP} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+# Rhino 8 SDK specific compilation flags for .rhp
+find_package(Rhino8SDK REQUIRED)
+target_link_libraries(${PLUGIN_RHP} PRIVATE 
+    RHINO_CORE_INTERFACE
+    3RD_PARTY_LIBS
+)
+target_precompile_headers(${PLUGIN_RHP} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h)
+target_compile_definitions(${PLUGIN_RHP} PRIVATE $<$<CONFIG:Debug>:_DEBUG;RHINO_DEBUG_PLUGIN>)
+set_target_properties(${PLUGIN_RHP} PROPERTIES SUFFIX ".rhp")
+set_target_properties(${PLUGIN_RHP} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+)
 file(GLOB WIN32_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.rc
-${CMAKE_CURRENT_SOURCE_DIR}/res/${PLUGIN_NAME}.rc
+    ${PLUGIN_NAME}.rc
+    res/${PLUGIN_NAME}.rc
 )
-target_sources(${PLUGIN_NAME} PRIVATE
-${SOURCES}
-${WIN32_RESOURCES}
+target_sources(${PLUGIN_RHP} PRIVATE
+    ${WIN32_RESOURCES}
 )
-
-target_include_directories(${PLUGIN_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_precompile_headers(${PLUGIN_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h)
-
-set_target_properties(${PLUGIN_NAME} PROPERTIES SUFFIX ".rhp")
-set_target_properties(${PLUGIN_NAME} PROPERTIES
-RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
-)
-
-# pre-processor data for the plugin
-target_compile_definitions(${PLUGIN_NAME} PRIVATE
+set(PLUGININFO_PREPROCESSOR_VAR
     PLUGIN_VERSION="${PLUGIN_VERSION}"
     PLUGIN_COMPANY_NAME=L\"${PLUGIN_COMPANY_NAME}\"
     PLUGIN_FILEVERSION_STR=L\"${PLUGIN_VERSION_MAJOR}, ${PLUGIN_VERSION_MINOR}, ${PLUGIN_VERSION_PATCH}, ${PLUGIN_VERSION_BUILD}\"
@@ -98,55 +163,23 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE
     PLUGIN_UPDATE_URL=L\"${PLUGIN_UPDATE_URL}\"
     PLUGIN_ID=L\"${PLUGIN_ID}\"
 )
+target_compile_definitions(${PLUGIN_RHP} PRIVATE ${PLUGININFO_PREPROCESSOR_VAR})
 
-# --------------------------------------------------------------------------------------------------------------------------
-# >>> Insert additional dependencies and options >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-# --------------------------------------------------------------------------------------------------------------------------
-# Insert here your additional libraries or options (e.g., Boost, OpenCV, etc.)
 
-# --------------------------------------------------------------------------------------------------------------------------
-# Basic dependencies and features
-# --------------------------------------------------------------------------------------------------------------------------
-# integration of Microsoft Foundation Classes (MFC) with CMake
-find_package(MFC REQUIRED)
-# It should be set to ``1`` for the static MFC library, and
-# ``2`` for the shared MFC library.  This is used in Visual Studio
-# project files.
-add_definitions(-D_AFXDLL)
-set(CMAKE_MFC_FLAG 2)
+# ----------------------------------------------------------------------------------------------------------------------------------------
+# Tests
+# ----------------------------------------------------------------------------------------------------------------------------------------
+# We integrate two types of tests:
+# 1. Unit tests: these are the ones that test your core library functionalities. Note that the commands are not unit-testable.
+# 2. Integration tests: these are testing only the commands on Rhino on a running headless instance of Rhino (via Rhino.Inside).
+# 3. .. free to add more tests as you like, e.g. performance tests, etc.
+if (BUILD_TESTS)
+    add_subdirectory(tests)
+endif()
 
-# Rhino 8 SDK
-find_package(Rhino8SDK REQUIRED)
-target_include_directories(${PLUGIN_NAME} PRIVATE ${RHINO8SDK_INCLUDE_DIR})
-target_link_libraries(${PLUGIN_NAME} PRIVATE
-    ${RHINO8SDK_LIB_DIR}/RhinoCore.lib
-    ${RHINO8SDK_LIB_DIR}/RhinoLibrary.lib
-    ${RHINO8SDK_LIB_DIR}/rdk.lib
-    ${RHINO8SDK_LIB_DIR}/opennurbs.lib
-)
-
-# Define required preprocessor macros
-target_compile_definitions(${PLUGIN_NAME} PRIVATE
-    WIN64
-    _WINDOWS
-    _USRDLL
-    _UNICODE
-    UNICODE
-    RHINO_LIB_DIR=${RHINO8SDK_LIB_DIR}
-)
-target_compile_options(${PLUGIN_NAME} PRIVATE /UWIN32)  # Add this to undefine WIN64
-
-# Set the precompiled variables for Debug/Release mode for VS multigeneator
-target_compile_definitions(${PLUGIN_NAME} PRIVATE
-    $<$<CONFIG:Debug>:_DEBUG;RHINO_DEBUG_PLUGIN>
-)
-target_compile_definitions(${PLUGIN_NAME} PRIVATE
-    $<$<CONFIG:Release>:NDEBUG>
-)
-
-# --------------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------------------------
 # Post-build steps
-# --------------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------------------------
 if (RUN_POSTBUILD_RHINO)
     message(STATUS "Running Rhino after build...")
     find_package(RhinoExe REQUIRED)
@@ -157,3 +190,4 @@ if (RUN_POSTBUILD_RHINO)
     )
     add_dependencies(run_rhino ${PLUGIN_NAME})
 endif()
+message(STATUS "========================================================================================================================")
