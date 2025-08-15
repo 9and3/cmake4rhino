@@ -1,0 +1,24 @@
+name: 'Download and Extract Rhino SDK'
+description: 'Downloads and extracts the Rhino SDK MSI'
+runs:
+  using: "composite"
+  steps:
+    - name: download the Rhino SDK msi in powershell
+      shell: pwsh
+      run: |
+        $url = "https://files.mcneel.com/dujour/exe/202507/rh821sdk_8.21.25188.17001.msi"
+        $output = "rh821sdk_8.21.25188.17001.msi"
+        Invoke-WebRequest -Uri $url -OutFile $output
+
+    - name: Install and extract Rhino SDK .msi with lessmsi
+      shell: pwsh
+      run: |
+        choco install lessmsi
+        lessmsi x rh821sdk_8.21.25188.17001.msi
+        ls "rh821sdk_8.21.25188.17001/SourceDir/Rhino 8 SDK"
+
+    - name: Set sdkRoot output
+      shell: pwsh
+      run: |
+        $sdkRoot = "$PWD\\rh821sdk_8.21.25188.17001\\SourceDir\\Rhino 8 SDK"
+        echo "sdkRoot=$sdkRoot" >> $env:GITHUB_OUTPUT
