@@ -60,7 +60,7 @@ jobs:
           mv !(cookiecutter.json|{{cookiecutter.your_plugin_name}}) "{{cookiecutter.your_plugin_name}}"/
 
       - name: Store the cookie template as an artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cookie-template
           path: template/
@@ -146,7 +146,7 @@ jobs:
         run: git remote set-url origin https://x-access-token:${{ secrets.ADMIN_CICD_TOKEN }}@github.com/9and3/cmake4rhino.git
 
       - name: Download cookie template
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: cookie-template
           path: template/
