@@ -1,5 +1,8 @@
 name: 'Download and Extract Rhino SDK'
 description: 'Downloads and extracts the Rhino SDK MSI'
+outputs:
+  sdkRoot:
+    description: "Path to extracted Rhino SDK"
 runs:
   using: "composite"
   steps:
