@@ -3,6 +3,7 @@ description: 'Downloads and extracts the Rhino SDK MSI'
 outputs:
   sdkRoot:
     description: "Path to extracted Rhino SDK"
+    value: ${{ steps.set_sdkroot.outputs.sdkRoot }}
 runs:
   using: "composite"
   steps:
@@ -21,6 +22,7 @@ runs:
         ls "rh821sdk_8.21.25188.17001/SourceDir/Rhino 8 SDK"
 
     - name: Set sdkRoot output
+      id: set_sdkroot
       shell: pwsh
       run: |
         $sdkRoot = "$PWD\\rh821sdk_8.21.25188.17001\\SourceDir\\Rhino 8 SDK"
