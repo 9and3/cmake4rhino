@@ -110,19 +110,6 @@ jobs:
         with:
           path: TesterPlugIn
 
-      # - name: download the Rhino SDK msi in powershell
-      #   run: |
-      #     $url = "https://files.mcneel.com/dujour/exe/202507/rh821sdk_8.21.25188.17001.msi"
-      #     $output = "rh821sdk_8.21.25188.17001.msi"
-      #     Invoke-WebRequest -Uri $url -OutFile $output
-
-      # - name: Install and extract Rhino SDK .msi with lessmsi
-      #   run: |
-      #     choco install lessmsi
-      #     lessmsi x rh821sdk_8.21.25188.17001.msi
-      #     ls "rh821sdk_8.21.25188.17001/SourceDir/Rhino 8 SDK"
-      #   shell: pwsh
-
       - name: Download and extract Rhino SDK
         id: rhino_sdk
         uses: ./.github/actions/rhino-sdk
