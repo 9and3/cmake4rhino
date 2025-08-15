@@ -1,0 +1,51 @@
+#include "resource.h"
+#include "targetver.h"
+#include "afxres.h"
+#include "verrsrc.h"
+
+// ------------------------------------------------------------------------------
+// Version/Plug-in info
+// ------------------------------------------------------------------------------
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION      @PLUGIN_VERSION@
+ PRODUCTVERSION   @PLUGIN_VERSION@
+ FILEFLAGSMASK    VS_FFI_FILEFLAGSMASK
+#ifdef _DEBUG
+ FILEFLAGS        VS_FF_DEBUG
+#else
+ FILEFLAGS        0x0L
+#endif
+ FILEOS           VOS_NT_WINDOWS32
+ FILETYPE         VFT_DLL
+ FILESUBTYPE      VFT2_UNKNOWN
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "0409"
+    BEGIN
+      VALUE "CompanyName",      "@PLUGIN_COMPANY_NAME@"
+      VALUE "FileDescription",  "@PLUGIN_FILE_DESCRIPTION@"
+      VALUE "FileVersion",      "@PLUGIN_VERSION@"
+      VALUE "InternalName",     "@PLUGIN_NAME@"
+      VALUE "LegalCopyright",   "@PLUGIN_LEGAL_COPYRIGHT@"
+      VALUE "OriginalFilename", "@PLUGIN_ORIGINAL_FILENAME@"
+      VALUE "ProductName",      "@PLUGIN_NAME@"
+      VALUE "ProductVersion",   "@PLUGIN_VERSION@"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x0409, 1252
+  END
+END
+
+// ------------------------------------------------------------------------------
+// Icon resource
+// ------------------------------------------------------------------------------
+IDI_ICON ICON "@ICON_PATH@"
+
+// ------------------------------------------------------------------------------
+// Optionally custom/manual resources here
+// ------------------------------------------------------------------------------
+
+
