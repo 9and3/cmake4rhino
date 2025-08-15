@@ -57,7 +57,7 @@ jobs:
           mv !(cookiecutter.json|{{cookiecutter.your_plugin_name}}) "{{cookiecutter.your_plugin_name}}"/
 
       - name: Commit and push to cookietemplate branch
-        if: github.event_name == 'push' && github.ref == 'refs/heads/Main'
+        # if: github.event_name == 'push' && github.ref == 'refs/heads/Main'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -67,4 +67,7 @@ jobs:
           git add .
           git commit -m "Build Cookiecutter template from Main"
           git push --force origin cookietemplate
+
+  # post-cookiecutter-build-test:
+
 

@@ -8,7 +8,6 @@
 # cmake4rhino
 
 This is a [CMake](https://cmake.org/) template for [Rhino plugins](https://developer.rhino3d.com/guides/cpp/), to quickly set up a new C++ project.
-It is tested to work with Rhino 8 and 7 SDKs, VSCode and MSVC 2019 and 2022 . All contributions are welcome!
 
 The template is distributed as a [cookiecutter](https://github.com/cookiecutter/cookiecutter) template, which can be used to generate a new project with the desired name and settings. Have fun cmakers!
 
@@ -122,7 +121,7 @@ Important flags:
 - `-DRUN_POSTBUILD_RHINO=ON`: Enable to automatically open RHino and install the plugin after building.
 
 ### Testing
-
+ 
 > [!IMPORTANT]  
 > Be sure to install by drag-and-drop the `build/Release/YourPlugin.rhp` file into the Rhino window before to run the tests. After this, the tests, if enabled, will work every time.
 
@@ -153,18 +152,22 @@ You can run your command as a macro and read and evaluate the generated geometri
 
 ### How it works
 
-<div style="display: flex; align-items: flex-start;">
-  <img src="assets/diagramrhptest.png" width="400" alt="diagramw" style="margin-right: 24px;">
-  <div>
-    The cmake project compilation is split in 3 parts:<br>
-    <ul>
-      <li><code>PLUGIN_CORE</code>: your external library</li>
-      <li><code>PLUGIN_RHP</code>: the Rhino plugin itself</li>
-      <li><code>PLUGIN_TEST</code>: where your tests live</li>
-    </ul>
-    Basically, Rhino is linked two times with different flags based on the `.rhp` compilation or the test part which is a console exec. For this last one we also add the `Rhino.Inside.Cpp`([here](https://github.com/mcneel/rhino-developer-samples/blob/8/rhino.inside/cpp/Main.cpp#L7)) headers which allows to run headless instances of Rhino.
-  </div>
-</div>
+<table>
+  <tr>
+    <td width="420">
+      <img src="assets/diagramrhptest.png" width="400" alt="diagramw">
+    </td>
+    <td> 
+      The cmake project compilation is split in 3 parts:<br>
+      <ul>
+        <li><code>PLUGIN_CORE</code>: your external library</li>
+        <li><code>PLUGIN_RHP</code>: the Rhino plugin itself</li>
+        <li><code>PLUGIN_TEST</code>: where your tests live</li>
+      </ul>
+      Basically, Rhino is linked two times with different flags based on the <code>.rhp</code> compilation or the test part which is a console exec. For this last one we also add the <code>Rhino.Inside.Cpp</code> ([here](https://github.com/mcneel/rhino-developer-samples/blob/8/rhino.inside/cpp/Main.cpp#L7)) headers which allows to run headless instances of Rhino.
+    </td>
+  </tr>
+</table>
 
 ### Contributions
 

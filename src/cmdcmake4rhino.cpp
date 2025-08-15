@@ -5,7 +5,7 @@
 #include "cmake4rhinoPlugIn.h"
 
 // Include any cusstom libraries or your own headers here
-#include "cmake4rhino/dummyLibFile.h"
+#include "core/dummyLibFile.h"
 
 // This is a personal test code to print debug messages in the console
 #include <windows.h>

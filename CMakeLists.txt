@@ -47,13 +47,13 @@ set(PLUGIN_ORIGINAL_FILENAME "${PLUGIN_NAME}.rhp")
 message(STATUS "==== Project Options ===================================================================================================")
 message(STATUS "  -DMFC_ROOT=...                                 : Path to the MFC root directory")
 set(MFC_ROOT "" CACHE PATH "")
-message(STATUS "  -DRHINOSDK_ROOT=...                           : Path to the Rhino 8 SDK root directory")
+message(STATUS "  -DRHINOSDK_ROOT=...                            : Path to the Rhino 8 SDK root directory")
 set(RHINOSDK_ROOT "" CACHE PATH "")
-message(STATUS "  -DRUN_POSTBUILD_RHINO=ON                       : Run Rhino just after the compilation (default: OFF)")
+message(STATUS "  -DRUN_POSTBUILD_RHINO=OFF                      : Run Rhino just after the compilation (default: OFF)")
 set(RUN_POSTBUILD_RHINO OFF CACHE BOOL "")
 message(STATUS "  -DRHINO_EXE_PATH=...                           : Path to the Rhino executable (Rhino.exe) path directory")
 set(RHINO_EXE_PATH "" CACHE PATH "")
-message(STATUS "  -DBUILD_TESTS=OFF                               : Enable tests (default: ON)")
+message(STATUS "  -DBUILD_TESTS=OFF                              : Enable tests (default: ON)")
 set(BUILD_TESTS OFF CACHE BOOL "")
 message(STATUS "========================================================================================================================")
 
@@ -86,7 +86,7 @@ message(STATUS "=== Compiling Core static library ==============================
 # This is the core section. Here you can put all the code you require, it will be the only part of your source 
 # code that can be unit tested. Note that it's not a library, but only a ensemble of source files compiled
 # differently based on the .rhp or test (there are differences in the compilation flags for Rhino 8 SDK).
-file(GLOB_RECURSE PLUGIN_CORE_SRC "${CMAKE_SOURCE_DIR}/src/${PLUGIN_NAME}/*.cpp")
+file(GLOB_RECURSE PLUGIN_CORE_SRC "${CMAKE_SOURCE_DIR}/src/core/*.cpp")
 recursive_print(PLUGIN_CORE_SRC HEADER "Compiling core library's sources:")
 
 # ----------------------------------------------------------------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 // #include "stdafx.h"
 #include "pch.h"
-#include "cmake4rhino/dummyLibFile.h"
+#include "core/dummyLibFile.h"
 
 // This is a simple test case to verify the use of Rhino SDK types and functions
 TEST(TEST_UNIT_RhinoTestSuite, TDPointTest) {

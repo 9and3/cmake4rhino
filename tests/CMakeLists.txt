@@ -42,9 +42,9 @@ target_link_options(${PLUGIN_TESTS} PRIVATE "/DELAYLOAD:RhinoCore.dll")
 
 gtest_discover_tests(${PLUGIN_TESTS})
 
-# to run the test after build
-# add_custom_command(TARGET ${PLUGIN_TESTS}
-#     POST_BUILD
-#     COMMAND $<TARGET_FILE:${PLUGIN_TESTS}>
-#     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-# )
+# to run the tests after build
+add_custom_command(TARGET ${PLUGIN_TESTS}
+    POST_BUILD
+    COMMAND $<TARGET_FILE:${PLUGIN_TESTS}>
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
